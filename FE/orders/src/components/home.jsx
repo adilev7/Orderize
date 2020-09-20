@@ -2,11 +2,13 @@ import React from "react";
 const Home = () => {
   return (
     <div className='container'>
-      <h1 className='display-2 text-center my-5 heading'>Welcome to ORDERIZE</h1>
+      <h1 className='display-2 text-center my-5 heading'>
+        Welcome to ORDERIZE
+      </h1>
       <div className='row'>
         <div className='col-12'>
           <p className='paragraph'>
-            Welcome to ORDERIZE, Lorem ipsum dolor sit amet consectetur
+            Welcome to 111 ORDERIZE, Lorem ipsum dolor sit amet consectetur
             adipisicing elit. Voluptates doloremque ab aliquid dolore
             voluptatibus consequatur sit nisi corporis, incidunt non
             repellendus. Ea labore itaque provident id fugit iusto quam impedit?

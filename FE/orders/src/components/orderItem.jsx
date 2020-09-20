@@ -1,12 +1,12 @@
 import React from "react";
-const OrderItem = ({ thisParent, deleteBtn }) => {
+const OrderItem = ({ thisParent, deleteBtn: counter }) => {
   return (
     <div className='row align-items-center justify-content-center my-2'>
       <div className='col-1 p-0'>
-        {deleteBtn ? (
+        {counter ? (
           <button
             className='text-center btn btn-danger rounded-circle d-block ml-auto'
-            onClick={thisParent.deleteItem}>
+            onClick={() => thisParent.deleteItem(counter)}>
             <i className='fas fa-times mx-auto text-white'></i>
           </button>
         ) : null}
@@ -15,10 +15,20 @@ const OrderItem = ({ thisParent, deleteBtn }) => {
         <div className='orderItem shadow-sm'>
           <div className='row'>
             <span className='col-9 col-md-10 mx-auto mr-0'>
-              {thisParent.renderInput("description", "Description")}
+              {thisParent.renderInput(
+                "description",
+                "Description",
+                null,
+                counter
+              )}
             </span>
             <span className='col-3 col-md-2 text-center ml-0 mx-auto'>
-              {thisParent.renderInput("quantity", "Quantity", "number")}
+              {thisParent.renderInput(
+                "quantity",
+                "Quantity",
+                "number",
+                counter
+              )}
             </span>
           </div>
         </div>
