@@ -7,10 +7,11 @@ import OrderItem from "./orderItem";
 class CreateOrder extends Form {
   state = {
     data: {
-      custName: "Yosi",
+      custName: "",
       orderItems: [
         {
-          description: "hi",
+          id: 0,
+          description: "",
           quantity: 1,
         },
       ],
@@ -18,8 +19,10 @@ class CreateOrder extends Form {
 
     errors: {},
   };
+  counter = 1;
 
   orderItemsSchema = {
+    id: Joi.number(),
     description: Joi.string().min(2).max(30).label("description"),
     quantity: Joi.number().min(1).label("quantity"),
   };
@@ -41,25 +44,25 @@ class CreateOrder extends Form {
   };
 
   duplicateItem = () => {
-    console.log("77777777777777");
-    let { data } = this.state;
     let { orderItems } = this.state.data;
-    let item = { description: "", quantity: 1 };
+    let item = { id: this.counter, description: "", quantity: 1 };
+    this.counter++;
     orderItems.push(item);
-    // this.setState({ orderItems: [...orderItems, item] });
-    this.setState({ data });
-    console.log(orderItems);
+    this.setState({ data: { orderItems } });
+    // console.log("duplicate888counter: ", this.counter);
+    // console.log(orderItems);
   };
 
   deleteItem = (id) => {
-    let { orderItemArr } = this.state;
-    orderItemArr = orderItemArr.filter((orderItem) => orderItem.id !== id);
-    this.setState({ orderItemArr });
+    let { orderItems } = this.state.data;
+    // console.log("B4 filter" + JSON.stringify(orderItems));
+    orderItems = orderItems.filter((item) => item.id !== id);
+    // console.log("AFTER" + JSON.stringify(orderItems));
+    this.setState({ data: { orderItems } });
   };
 
   render() {
-    let counter = 0;
-    console.log("9999999999999");
+    console.log("state8888888888888" + JSON.stringify(this.state));
     return (
       <div className='container-fluid mt-2'>
         <div className='row'>
@@ -70,22 +73,17 @@ class CreateOrder extends Form {
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>
           <div className='row'>
             <div className='col-12 col-lg-8 mx-auto'>
-              {this.renderInput("custName", "Customer Name")}
+              {this.renderInput("custName", "Customer Name", null, null)}
             </div>
           </div>
           {this.state.data.orderItems.map((item) => {
-            console.log("0000000000", counter);
-            let show = counter !== 0;
             return (
-              <OrderItem
-                thisParent={this}
-                key={counter++}
-                deleteBtn={show} /* {counter === 0 ? false : true} */
-              />
+              <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
             );
           })}
+
           {/* {this.orderItemArr.map((orderItem) => orderItem)} */}
-          {this.renderButton("Submit")}
+          {/* {this.renderButton("Submit")} */}
         </form>
       </div>
     );
