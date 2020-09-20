@@ -93,7 +93,7 @@ class Form extends Component {
     const { data, errors } = this.state;
     // errors[name]
     //   ? console.log("errors[name] EXISTS!!!! ", errors[name])
-    //   : console.log("errors.orderItems IS ALIVE!!!! ", errors.orderItems); 5555555
+    //  666 : console.log("errors.orderItems IS ALIVE!!!! ", errors.orderItems); 5555555
 
     var xxx = errors.orderItems
       ? errors.orderItems.filter((elmnt) => elmnt[id] === id)
