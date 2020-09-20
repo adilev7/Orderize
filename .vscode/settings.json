@@ -1,0 +1,16 @@
+{
+  "editor.detectIndentation": false,
+  "files.autoSave": "afterDelay",
+  "terminal.integrated.fontSize": 16,
+  "rest-client.fontSize": 16,
+  "editor.fontSize": 16,
+  "debug.console.fontSize": 16,
+  "markdown.preview.fontSize": 16,
+"editor.fontLigatures": true,
+"editor.fontWeight": "600",
+"terminal.integrated.fontWeight": "600",
+"terminal.integrated.fontWeightBold": "900",
+"rest-client.fontWeight": "600",
+"git.ignoreLimitWarning": true
+  /* "editor.codeActionsOnSave": null */
+}
