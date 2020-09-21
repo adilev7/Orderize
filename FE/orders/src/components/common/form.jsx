@@ -12,24 +12,23 @@ class Form extends Component {
     });
     if (!error) return null;
 
-    const validate_errors = {};
-    let validate_orderItems = [];
+    const errors = {};
+    let orderItems = [];
     for (let item of error.details) {
       console.log("77777 error item:  ", item);
       item.path[0] === "orderItems"
         ? // ? (errors["orderItems"][0][item.path[2]] = item.message)
-          validate_orderItems.push({
-            idx: item.path[1],
-            err_desc: `${item.path[2]}: ${item.message}`,
+          orderItems.push({
+            [`${item.path[2]}<${item.path[1]}>`]: item.message,
           })
         : //   (orderItems[item.path[1]] = { [item.path[2]]: item.message })
-          (validate_errors[item.path[0]] = item.message);
+          (errors[item.path[0]] = item.message);
     }
-    validate_errors["orderItems"] = validate_orderItems;
+    errors["orderItems"] = orderItems;
     console.log("errorSSSSS:  ", JSON.stringify(this.state));
     // console.log("errors orderitems:  ", JSON.stringify(orderItems));
 
-    return validate_errors !== {} ? validate_errors : null;
+    return errors.length ? errors : null;
   };
 
   ///* VALIDATE INPUT */
@@ -54,26 +53,38 @@ class Form extends Component {
   //Sets the 'errors' object in the state everytime an error changes or doesn't exist.
   //Starts a binding between the data object in the state and the input's value.
   handleChange = ({ currentTarget: input }) => {
-    // const { data, errors } = this.state;
     const data = { ...this.state.data };
-    //===>>>>>>> const errors = { ...this.state.data };
-    const errors = { ...this.state.data.errors };
+    const errors = { ...this.state.errors };
 
     const errorMessage = this.validateInput(input);
 
-    errorMessage
-      ? (errors[input.name] = { indx: input.id, err_desc: errorMessage })
-      : delete errors[input.name];
+    if (errorMessage) {
+      if (input.name in errors) {
+        errors[input.name] = errorMessage;
+      } else {
+        errors.orderItems = errors.orderItems.filter(
+          (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
+        );
+        errors.orderItems.push({
+          [`${input.name}<${input.id}>`]: errorMessage,
+        });
+      }
+    } else {
+      input.name in errors
+        ? delete errors[input.name]
+        : (errors.orderItems = errors.orderItems.filter(
+            (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
+          ));
+    }
 
     input.name in data
       ? (data[input.name] = input.value)
-      : (data.orderItems[input.id ? input.id : 0][input.name] = input.value);
-    this.setState({ data, errors });
-    // console.log("input.name:  ", input.name);
-    // console.log("input.value:  ", input.value);
-
-    // console.log("DATAAAAAAAA:  ", data);
-    // console.log("DATA[custName]:  ", this.state.data["custName"]);
+      : (data.orderItems[input.id || 0][input.name] = input.value);
+    this.setState({
+      data,
+      errors,
+    });
+    console.log("hellooooo" + JSON.stringify(this.state.errors.orderItems));
   };
 
   ///* HANDLE SUBMIT */
@@ -90,15 +101,9 @@ class Form extends Component {
 
   //Bind the value of the input to "data[name]" if exists, if not, bind to "data.orderItems[data.orderItems.length-1][name]", witch is the last item in the array, on the [name] prop;
   renderInput = (name, label, type = "text", id) => {
-    const { data, errors } = this.state;
-    // errors[name]
-    //   ? console.log("errors[name] EXISTS!!!! ", errors[name])
-    //  666 : console.log("errors.orderItems IS ALIVE!!!! ", errors.orderItems); 5555555
-
-    var xxx = errors.orderItems
-      ? errors.orderItems.filter((elmnt) => elmnt[id] === id)
-      : "";
-    console.log("66666666666", errors.orderItems);
+    let data = { ...this.state.data };
+    const errors = { ...this.state.errors };
+    console.log("is it true render? ", errors.orderItems === true);
     return (
       <Input
         name={name}
@@ -107,12 +112,11 @@ class Form extends Component {
         id={id}
         type={type}
         error={
-          errors[name]
-            ? errors[name]
-            : xxx /*  ? errors[name] : errors.orderItems */
+          !errors.orderItems.length
+            ? errors[name] || null
+            : errors.orderItems[`${name}<${id || 0}>`] || null
         }
-        // error={errors[name] || errors.orderItems[id ? id : 0][name] || null}
-        value={data[name] ? data[name] : data.orderItems[id ? id : 0][name]}
+        value={data[name] || data.orderItems[id || 0][name]}
         onChange={this.handleChange}
       />
     );

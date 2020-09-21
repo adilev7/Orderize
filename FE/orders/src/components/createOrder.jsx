@@ -17,7 +17,10 @@ class CreateOrder extends Form {
       ],
     },
 
-    errors: {},
+    errors: {
+      custName: "",
+      orderItems: [],
+    },
   };
   counter = 1;
 

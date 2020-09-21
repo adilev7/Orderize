@@ -1,13 +1,13 @@
 import React from "react";
 const Input = ({ name, label, error, ...rest }) => {
-  console.log("xxxxxxx ", error);
-  let error1 = "";
+  console.log("INPUT ERR:  ", error);
+//   let error1 = "";
 
-  if (rest.id === Number(error.indx)) {
+  /* if (rest.id === Number(error.indx)) {
     error1 = error.err_desc;
   } else {
     error1 = "";
-  }
+  } */
 
   return (
     <div className='form-group'>
@@ -18,7 +18,7 @@ const Input = ({ name, label, error, ...rest }) => {
         className='form-control'
         autoComplete='off'
       />
-      {error && <span className='text-danger'>{error1}</span>}
+      {error && <span className='text-danger'>{error}</span>}
     </div>
   );
 };
