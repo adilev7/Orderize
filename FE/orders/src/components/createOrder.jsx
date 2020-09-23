@@ -38,6 +38,38 @@ class CreateOrder extends Form {
       .items(this.orderItemsSchema),
   };
 
+  handleErrChnge = (errors, input, errorMessage) => {
+    if (errorMessage) {
+      if (input.name === "custName") {
+        errors[input.name] = errorMessage;
+      } else {
+        errors.orderItems = errors.orderItems.filter(
+          (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
+        );
+        errors.orderItems.push({
+          [`${input.name}<${input.id}>`]: errorMessage,
+        });
+      }
+    } else {
+      errors.hasOwnProperty(input.name)
+        ? delete errors[input.name]
+        : (errors.orderItems = errors.orderItems.filter(
+            (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
+          ));
+    }
+  };
+
+  handleErrRndr = (errors, name, id) => {
+    if (name !== "custName") {
+      let i = errors.orderItems.find((item) =>
+        item.hasOwnProperty(`${name}<${id}>`)
+      );
+      return i !== undefined ? i[`${name}<${id}>`] : null;
+    } else {
+      return errors[name];
+    }
+  };
+
   doSubmit = async () => {
     const data = { ...this.state.data };
     await orderService.createOrder(data);
@@ -76,7 +108,7 @@ class CreateOrder extends Form {
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>
           <div className='row'>
             <div className='col-12 col-lg-8 mx-auto'>
-              {this.renderInput("custName", "Customer Name", null, null)}
+              {this.renderInput("custName", "Customer Name")}
             </div>
           </div>
           {this.state.data.orderItems.map((item) => {
@@ -86,7 +118,7 @@ class CreateOrder extends Form {
           })}
 
           {/* {this.orderItemArr.map((orderItem) => orderItem)} */}
-          {/* {this.renderButton("Submit")} */}
+          {this.renderButton("Submit")}
         </form>
       </div>
     );

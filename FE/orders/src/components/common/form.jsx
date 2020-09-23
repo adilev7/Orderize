@@ -28,7 +28,7 @@ class Form extends Component {
     console.log("errorSSSSS:  ", JSON.stringify(this.state));
     // console.log("errors orderitems:  ", JSON.stringify(orderItems));
 
-    return errors.length ? errors : null;
+    return errors;
   };
 
   ///* VALIDATE INPUT */
@@ -43,7 +43,6 @@ class Form extends Component {
         ? this.schema[name]
         : this.orderItemsSchema[name],
     };
-
     const { error } = Joi.validate(obj, schema);
     console.log(JSON.stringify(error));
     return error ? error.details[0].message : null;
@@ -58,33 +57,16 @@ class Form extends Component {
 
     const errorMessage = this.validateInput(input);
 
-    if (errorMessage) {
-      if (input.name in errors) {
-        errors[input.name] = errorMessage;
-      } else {
-        errors.orderItems = errors.orderItems.filter(
-          (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
-        );
-        errors.orderItems.push({
-          [`${input.name}<${input.id}>`]: errorMessage,
-        });
-      }
-    } else {
-      input.name in errors
-        ? delete errors[input.name]
-        : (errors.orderItems = errors.orderItems.filter(
-            (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
-          ));
-    }
+    this.handleErrChnge(errors, input, errorMessage);
 
-    input.name in data
+    data.hasOwnProperty(input.name)
       ? (data[input.name] = input.value)
       : (data.orderItems[input.id || 0][input.name] = input.value);
+
     this.setState({
       data,
       errors,
     });
-    console.log("hellooooo" + JSON.stringify(this.state.errors.orderItems));
   };
 
   ///* HANDLE SUBMIT */
@@ -103,7 +85,7 @@ class Form extends Component {
   renderInput = (name, label, type = "text", id) => {
     let data = { ...this.state.data };
     const errors = { ...this.state.errors };
-    console.log("is it true render? ", errors.orderItems === true);
+    let inptErr = this.handleErrRndr(errors, name, id);
     return (
       <Input
         name={name}
@@ -111,11 +93,7 @@ class Form extends Component {
         min={type === "number" ? 1 : null}
         id={id}
         type={type}
-        error={
-          !errors.orderItems.length
-            ? errors[name] || null
-            : errors.orderItems[`${name}<${id || 0}>`] || null
-        }
+        error={inptErr}
         value={data[name] || data.orderItems[id || 0][name]}
         onChange={this.handleChange}
       />
@@ -123,9 +101,11 @@ class Form extends Component {
   };
   renderButton = (label) => {
     return (
-      <button className='btn btn-primary' disabled={() => this.validate()}>
-        {label}
-      </button>
+      <div className='container'>
+        <button className='btn btn-primary m-5 ' disabled={this.validate()}>
+          {label}
+        </button>
+      </div>
     );
   };
 }
