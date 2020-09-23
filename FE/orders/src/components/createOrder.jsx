@@ -38,6 +38,8 @@ class CreateOrder extends Form {
       .items(this.orderItemsSchema),
   };
 
+  /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */
+  // "handleErrChange" rearranges the 'error' object of the state, due to changes.
   handleErrChnge = (errors, input, errorMessage) => {
     if (errorMessage) {
       if (input.name === "custName") {
@@ -59,6 +61,8 @@ class CreateOrder extends Form {
     }
   };
 
+  /* "handleErrRndr" will invoke inside the "renderInput" function in 'form.jsx' */
+  // "handleErrRndr" returns the relevant error message in order to match its relevant input.
   handleErrRndr = (errors, name, id) => {
     if (name !== "custName") {
       let i = errors.orderItems.find((item) =>
@@ -78,31 +82,33 @@ class CreateOrder extends Form {
     this.props.history.replace("/orders");
   };
 
-  duplicateItem = () => {
-    let { orderItems } = this.state.data;
+  duplicateItem = (e) => {
+    e.preventDefault();
+    let data = { ...this.state.data };
+    let orderItems = [...this.state.data.orderItems];
     let item = { id: this.counter, description: "", quantity: 1 };
+    this.setState({ data: { ...data, orderItems: [...orderItems, item] } });
     this.counter++;
-    orderItems.push(item);
-    this.setState({ data: { orderItems } });
-    // console.log("duplicate888counter: ", this.counter);
-    // console.log(orderItems);
   };
 
-  deleteItem = (id) => {
-    let { orderItems } = this.state.data;
-    // console.log("B4 filter" + JSON.stringify(orderItems));
+  deleteItem = (e, id) => {
+    e.preventDefault();
+    let data = { ...this.state.data };
+    let orderItems = [...this.state.data.orderItems];
+    //Rearrange "orderItems" to be without the deleted item;
     orderItems = orderItems.filter((item) => item.id !== id);
-    // console.log("AFTER" + JSON.stringify(orderItems));
-    this.setState({ data: { orderItems } });
+    this.counter = 0;
+    //Reset the counter (id) to each item;
+    orderItems.map((item) => (item.id = this.counter++));
+    this.setState({ data: { ...data, orderItems } });
   };
 
   render() {
-    console.log("state8888888888888" + JSON.stringify(this.state));
     return (
       <div className='container-fluid mt-2'>
         <div className='row'>
           <div className='col-10 text-center heading mx-auto my-5'>
-            <h1 className='display-3'>Create A New Order</h1>
+            <h1 className='display-3'>New Order</h1>
           </div>
         </div>
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>
@@ -116,8 +122,6 @@ class CreateOrder extends Form {
               <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
             );
           })}
-
-          {/* {this.orderItemArr.map((orderItem) => orderItem)} */}
           {this.renderButton("Submit")}
         </form>
       </div>

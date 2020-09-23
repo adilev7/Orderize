@@ -6,7 +6,7 @@ const OrderItem = ({ thisParent, deleteBtn: counter }) => {
         {counter ? (
           <button
             className='text-center btn btn-danger rounded-circle d-block ml-auto'
-            onClick={() => thisParent.deleteItem(counter)}>
+            onClick={(e) => thisParent.deleteItem(e, counter)}>
             <i className='fas fa-times mx-auto text-white'></i>
           </button>
         ) : null}
@@ -15,19 +15,14 @@ const OrderItem = ({ thisParent, deleteBtn: counter }) => {
         <div className='orderItem shadow-sm'>
           <div className='row'>
             <span className='col-9 col-md-10 mx-auto mr-0'>
-              {thisParent.renderInput(
-                "description",
-                "Description",
-                null,
-                counter
-              )}
+              {thisParent.renderInput("description", "Description", counter)}
             </span>
             <span className='col-3 col-md-2 text-center ml-0 mx-auto'>
               {thisParent.renderInput(
                 "quantity",
                 "Quantity",
-                "number",
-                counter
+                counter,
+                "number"
               )}
             </span>
           </div>
@@ -36,7 +31,7 @@ const OrderItem = ({ thisParent, deleteBtn: counter }) => {
       <div className='col-1 p-0'>
         <button
           className='text-center btn btn-warning rounded-circle d-block mr-auto'
-          onClick={thisParent.duplicateItem}>
+          onClick={(e) => thisParent.duplicateItem(e)}>
           <i className='fas fa-plus mx-auto text-white'></i>
         </button>
       </div>
