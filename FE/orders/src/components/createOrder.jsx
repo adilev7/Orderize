@@ -26,12 +26,12 @@ class CreateOrder extends Form {
 
   orderItemsSchema = {
     id: Joi.number(),
-    description: Joi.string().min(2).max(30).label("description"),
-    quantity: Joi.number().min(1).label("quantity"),
+    description: Joi.string().min(2).max(30).label("Description"),
+    quantity: Joi.number().min(1).label("Quantity"),
   };
 
   schema = {
-    custName: Joi.string().min(2).max(30).required().label("custName"),
+    custName: Joi.string().min(2).max(30).required().label("Customer Name"),
     orderItems: Joi.array()
       .label("orderItems")
       .required()
