@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 /* import PageHeader from "./common/pageHeader"; */
 import orderService from "../services/orderService";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 
 class Orders extends Component {
@@ -9,18 +9,21 @@ class Orders extends Component {
     orders: [],
   };
   async componentDidMount() {
-    //Get orders from DB and store in orders
+    //Get orders from DB and store in orders array
     const { data } = await orderService.getAllOrders();
-    if (data.length) {
-      this.setState({ orders: data });
-    }
-    // TOAST - listed orders
-    if (this.state.orders.length) {
-      return toast(
-        `There are currently ${this.state.orders.length} orders listed.`
-      );
-    }
-    toast("No orders have been listed...");
+    data.length
+      ? this.setState({ orders: data })
+      : toast("No orders have been listed...");
+  }
+
+  dltOrder(e, orderId) {
+    e.preventDefault();
+    // let confirm = confirm("ARE YOU SURE?");
+    // if (confirm) {
+    orderService.deleteOrder(orderId);
+    this.props.history.replace("/orders");
+    return toast(`Order ${this.state.data._id} has been successfuly deleted`);
+    // } else return null;
   }
 
   render() {
@@ -33,8 +36,8 @@ class Orders extends Component {
           <div className='row mt-5'>
             <div className='col-10 ml-md-5 mx-auto'>
               <h4 className='mb-5 mt-3 heading'>
-                {this.state.orders.length
-                  ? `There are currently ${this.state.orders.length} orders listed.`
+                {orders.length
+                  ? `There are currently ${orders.length} orders listed.`
                   : "Loading Orders..."}
               </h4>
               <Link to='/create-order'>
@@ -62,12 +65,43 @@ class Orders extends Component {
                 {orders.length > 0 &&
                   orders.map((order) => (
                     <tr key={order._id}>
-                      <td>
-                        <Link to='/order'>{order._id}</Link>
+                      <td className='p-0'>
+                        <div className='btn-group'>
+                          <button
+                            type='button'
+                            className='btn btn-light mr-3 ml-0 rounded h-100 py-3 my-0 dropdown-toggle-split'
+                            data-toggle='dropdown'
+                            aria-haspopup='true'
+                            aria-expanded='false'>
+                            <i className='fas fa-ellipsis-v'></i>
+                          </button>
+                          <div className='dropdown-menu p-0 bg-light'>
+                            <NavLink
+                              className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                              to={`/orders/${order._id}`}>
+                              <i className='fas fa-clipboard text-secondary mr-2'></i>
+                              View Order
+                            </NavLink>
+                            <NavLink
+                              className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                              to='/'>
+                              <i className='fas fa-pen text-primary mr-2'></i>{" "}
+                              Edit Order
+                            </NavLink>
+                            <div className='dropdown-divider p-0 m-0'></div>
+                            <button
+                              className='dropdown-item bg-light text-dark pl-3 p-1'
+                              onClick={(e) => {
+                                this.dltOrder(e, order._id);
+                              }}>
+                              <i className='fas fa-trash text-danger mr-2'></i>{" "}
+                              Delete Order
+                            </button>
+                          </div>
+                        </div>
+                        <span>{order._id}</span>
                       </td>
-                      <td>
-                        <Link to='/customer'>{order.custName}</Link>
-                      </td>
+                      <td>{order.custName}</td>
                       <td className='text-center'>{order.orderItems.length}</td>
                       <td>{`${Number((Math.random() * 151).toFixed(2))}$`}</td>
                       <td>{order.createdAt}</td>

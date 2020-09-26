@@ -103,6 +103,28 @@ class CreateOrder extends Form {
     this.setState({ data: { ...data, orderItems } });
   };
 
+  renderTable = () => {
+    return (
+      <table className='table table-sm col-12 col-md-8 mx-auto table-bordered table-warning table-striped border-2'>
+        <caption className='d-none'>Selected Products</caption>
+        <thead className='text-dark bg-warning'>
+          <tr>
+            <th scope='col'>No.</th>
+            <th scope='col'>Description</th>
+            <th scope='col'>Quantity</th>
+            <th scope='col'>Price</th>
+            <th scope='col'></th>
+          </tr>
+        </thead>
+        <tbody className='text-dark'>
+          {this.state.data.orderItems.map((item) => (
+            <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
   render() {
     return (
       <div className='container-fluid mt-2'>
@@ -117,12 +139,25 @@ class CreateOrder extends Form {
               {this.renderInput("custName", "Customer Name")}
             </div>
           </div>
-          {this.state.data.orderItems.map((item) => {
-            return (
-              <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
-            );
-          })}
-          {this.renderButton("Submit")}
+          <div className='row-fluid'>
+            {this.state.data["custName"].length ? (
+              this.renderTable()
+            ) : (
+              <p className='text-center'>
+                <strong>Please provide customer name to continue...</strong>
+              </p>
+            )}
+          </div>
+          <div className='row mt-5'>
+            <div className='col-10 col-md-8 col-lg-4 mx-auto'>
+              <span className='mr-3 h4'>{`Total Order Price: $${
+                this.state.data["orderItems"][0]["description"].length
+                  ? Number((Math.random() * 151).toFixed(2))
+                  : "0"
+              }`}</span>
+              <span>{this.renderButton("Submit")}</span>
+            </div>
+          </div>
         </form>
       </div>
     );

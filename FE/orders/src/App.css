@@ -50,3 +50,19 @@ nav {
   background-color: rgba(255, 230, 0, 0.1);
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
+
+tr td.td {
+  width: 5%;
+}
+tr td.td2 {
+  width: 8%;
+}
+tr td.description {
+  width: 60%;
+}
+
+.delete:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #be4844 !important;
+}

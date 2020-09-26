@@ -14,7 +14,6 @@ export function editOrder(order) {
 }
 
 export function deleteOrder(orderId) {
-  alert("are you sure?");
   return http.delete(`${apiUrl}/orders/${orderId}`);
 }
 

@@ -3,7 +3,7 @@ const Input = ({ name, label, error, ...rest }) => {
   console.log("INPUT ERR:  ", error);
   return (
     <div className='form-group'>
-      <label htmlFor={name}>{label}</label>
+      {name === "custName" && <label htmlFor={name}>{label}</label>}
       <input
         {...rest}
         name={name}

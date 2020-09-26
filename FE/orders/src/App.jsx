@@ -11,6 +11,7 @@ import Orders from "./components/orders";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import CreateOrder from "./components/createOrder";
+import MyOrder from "./components/myOrder";
 
 function App() {
   return (
@@ -19,11 +20,12 @@ function App() {
       <header>
         <Navbar />
       </header>
-      <main className='container-fluid flex-fill mb-5'>
+      <main className='container-fluid flex-fill mb-5 min-vh-100'>
         <Switch>
           <Route path='/' exact component={Home} />
-          <Route path='/orders' component={Orders} />
+          <Route path='/orders' exact component={Orders} />
           <Route path='/create-order' component={CreateOrder} />
+          <Route path='/orders/:id' component={MyOrder} />
           <Route path='/about' component={About} />
         </Switch>
       </main>
