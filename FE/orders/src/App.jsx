@@ -26,7 +26,6 @@ function App() {
           <Route path='/' exact component={Home} />
           <Route path='/orders' exact component={Orders} />
           <Route path='/create-order' component={CreateOrder} />
-          <Route path='/edit-order/:id' component={CreateOrder} />
           <Route path='/orders/:id' component={MyOrder} />
           <Route path='/about' component={About} />
           <Route path='*' component={NotFound} />

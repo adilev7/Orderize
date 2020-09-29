@@ -83,15 +83,15 @@ class Orders extends Component {
                             </NavLink>
                             <NavLink
                               className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
-                              to={`edit-order/${order._id}`}>
+                              to='/'>
                               <i className='fas fa-pen text-primary mr-2'></i>{" "}
                               Edit Order
                             </NavLink>
                             <div className='dropdown-divider p-0 m-0'></div>
                             <button
                               className='dropdown-item bg-light text-dark pl-3 p-1'
-                              onClick={(e) => {
-                                this.dltOrder(e, order._id);
+                              onClick={() => {
+                                this.dltOrder(order._id);
                               }}>
                               <i className='fas fa-trash text-danger mr-2'></i>{" "}
                               Delete Order

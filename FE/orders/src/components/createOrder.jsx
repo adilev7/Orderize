@@ -10,7 +10,7 @@ class CreateOrder extends Form {
       custName: "",
       orderItems: [
         {
-          _id: 0,
+          id: 0,
           description: "",
           quantity: 1,
         },
@@ -22,10 +22,10 @@ class CreateOrder extends Form {
       orderItems: [],
     },
   };
-  counter = 0;
+  counter = 1;
 
   orderItemsSchema = {
-    _id: Joi.string(),
+    id: Joi.number(),
     description: Joi.string().min(2).max(30).label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
@@ -38,26 +38,6 @@ class CreateOrder extends Form {
       .items(this.orderItemsSchema),
   };
 
-  componentDidMount = async () => {
-    if (this.props.match.params.id) {
-      const data = await orderService
-        .getOrder(this.props.match.params.id)
-        .then((response) => {
-          console.log("DATA FETCHED!");
-          return response.data;
-        })
-        .catch((error) => {
-          this.props.history.replace("/notFound");
-          console.error(error.response);
-        });
-
-      if (data) {
-        console.log("DATA EXISTS! ", data);
-        this.setState({ data: data[0] });
-        console.log("DATA AFTER SET: ", this.state.data);
-      }
-    }
-  };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */
   // "handleErrChange" rearranges the 'error' object of the state, due to changes.
@@ -84,12 +64,12 @@ class CreateOrder extends Form {
 
   /* "handleErrRndr" will invoke inside the "renderInput" function in 'form.jsx' */
   // "handleErrRndr" returns the relevant error message in order to match its relevant input.
-  handleErrRndr = (errors, name, counter) => {
+  handleErrRndr = (errors, name, id) => {
     if (name !== "custName") {
       let i = errors.orderItems.find((item) =>
-        item.hasOwnProperty(`${name}<${counter}>`)
+        item.hasOwnProperty(`${name}<${id}>`)
       );
-      return i !== undefined ? i[`${name}<${counter}>`] : null;
+      return i !== undefined ? i[`${name}<${id}>`] : null;
     } else {
       return errors[name];
     }
@@ -97,12 +77,8 @@ class CreateOrder extends Form {
 
   doSubmit = async () => {
     const data = { ...this.state.data };
-    if (this.state.data._id) {
-      await orderService.editOrder(data);
-      this.setState({ data }); //?
-    }
     await orderService.createOrder(data);
-    this.setState({ data }); //?
+    this.setState({ data });
     this.props.history.replace("/orders");
     toast("The Order Has Been Listed Successfuly");
   };
@@ -111,7 +87,7 @@ class CreateOrder extends Form {
     e.preventDefault();
     let data = { ...this.state.data };
     let orderItems = [...this.state.data.orderItems];
-    let item = { description: "", quantity: 1 };
+    let item = { id: this.counter, description: "", quantity: 1 };
     this.setState({ data: { ...data, orderItems: [...orderItems, item] } });
     this.counter++;
   };
@@ -121,10 +97,10 @@ class CreateOrder extends Form {
     let data = { ...this.state.data };
     let orderItems = [...this.state.data.orderItems];
     //Rearrange "orderItems" to be without the deleted item;
-    orderItems = orderItems.filter((item) => item._id !== id);
-    // this.counter = 0;
+    orderItems = orderItems.filter((item) => item.id !== id);
+    this.counter = 0;
     //Reset the counter (id) to each item;
-    // orderItems.map((item) => (item._id = this.counter++));
+    orderItems.map((item) => (item.id = this.counter++));
     this.setState({ data: { ...data, orderItems } });
   };
 
@@ -143,13 +119,7 @@ class CreateOrder extends Form {
         </thead>
         <tbody className='text-dark'>
           {this.state.data.orderItems.map((item) => (
-            // <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
-            <OrderItem
-              id={item._id}
-              counter={this.counter++}
-              key={item._id}
-              thisParent={this}
-            />
+            <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
           ))}
         </tbody>
       </table>
@@ -161,9 +131,7 @@ class CreateOrder extends Form {
       <div className='container-fluid mt-2'>
         <div className='row'>
           <div className='col-10 text-center heading mx-auto my-5'>
-            <h1 className='display-3'>
-              {this.state.data._id ? "Edit Order" : "New Order"}
-            </h1>
+            <h1 className='display-3'>New Order</h1>
           </div>
         </div>
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>
@@ -173,7 +141,7 @@ class CreateOrder extends Form {
             </div>
           </div>
           <div className='row-fluid'>
-            {this.state.data.custName.length ? (
+            {this.state.data["custName"].length ? (
               this.renderTable()
             ) : (
               <p className='text-center'>
@@ -184,7 +152,7 @@ class CreateOrder extends Form {
           <div className='row mt-5'>
             <div className='col-10 col-md-8 col-lg-4 mx-auto'>
               <span className='mr-3 h4'>{`Total Order Price: $${
-                this.state.data.orderItems[0].description.length
+                this.state.data["orderItems"][0]["description"].length
                   ? Number((Math.random() * 151).toFixed(2))
                   : "0"
               }`}</span>
