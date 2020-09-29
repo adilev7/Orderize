@@ -3,14 +3,20 @@ import { apiUrl } from "../config.json";
 
 //compare the http (axios) methods to the server side endpoints
 
-export function getOrder(orderId) {
-  return http.get(`${apiUrl}/orders/${orderId}`);
+export async function getOrder(orderId) {
+  // try {
+  const order = await http.get(`${apiUrl}/orders/${orderId}`);
+  console.log("ddddd");
+  return order;
+  // } catch (err) {
+  //   console.log("error", err);
+  // }
 }
 
 export function editOrder(order) {
   //Destruct the parameter (order) into _id and ...rest. rename the _id (orderId).
-  const { _id: orderId, ...bodyOrder } = order;
-  return http.put(`${apiUrl}/orders/${orderId}`, bodyOrder);
+  const { _id: orderId, ...orderBody } = order;
+  return http.put(`${apiUrl}/orders/${orderId}`, orderBody);
 }
 
 export function deleteOrder(orderId) {
@@ -18,7 +24,6 @@ export function deleteOrder(orderId) {
 }
 
 export function createOrder(order) {
-  console.log("create order 88888888", JSON.stringify(order));
   return http.post(`${apiUrl}/orders`, order);
 }
 

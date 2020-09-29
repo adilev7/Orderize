@@ -8,30 +8,29 @@ class Orders extends Component {
   state = {
     orders: [],
   };
+
   async componentDidMount() {
     //Get orders from DB and store in orders array
     const { data } = await orderService.getAllOrders();
-    data.length
+    data
       ? this.setState({ orders: data })
       : toast("No orders have been listed...");
   }
 
-  dltOrder(e, orderId) {
-    e.preventDefault();
-    // let confirm = confirm("ARE YOU SURE?");
-    // if (confirm) {
-    orderService.deleteOrder(orderId);
-    this.props.history.replace("/orders");
-    return toast(`Order ${this.state.data._id} has been successfuly deleted`);
-    // } else return null;
-  }
+  dltOrder = async (orderId) => {
+    let orders = [...this.state.orders];
+    if (window.confirm("ARE YOU SURE?")) {
+      await orderService.deleteOrder(orderId);
+      orders = orders.filter((item) => item._id !== orderId);
+      toast(`Order ${orderId} has been successfuly deleted`);
+    }
+    this.setState({ orders });
+  };
 
   render() {
     const { orders } = this.state;
-
     return (
       <div>
-        {/* <PageHeader titleText="My Orders Page" /> */}
         <div className='container text-center text-md-left'>
           <div className='row mt-5'>
             <div className='col-10 ml-md-5 mx-auto'>
@@ -84,7 +83,7 @@ class Orders extends Component {
                             </NavLink>
                             <NavLink
                               className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
-                              to='/'>
+                              to={`edit-order/${order._id}`}>
                               <i className='fas fa-pen text-primary mr-2'></i>{" "}
                               Edit Order
                             </NavLink>

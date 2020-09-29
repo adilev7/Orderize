@@ -11,6 +11,9 @@ const getOrders = async () => {
 const getOrderById = async (id) => {
   const order = await Order.find({
     _id: id,
+  }).catch((err) => {
+    console.log("ERROR", err);
+    return null;
   });
   return order;
 };

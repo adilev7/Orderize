@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import orderService from "../services/orderService";
+// import axios from "axios";
 
 class MyOrder extends Component {
   state = {
@@ -21,20 +22,29 @@ class MyOrder extends Component {
   counter = 1;
 
   componentDidMount = async () => {
-    //Get orders from DB and store in orders array
-    const { data } = await orderService.getOrder(this.props.match.params.id);
-    return data
-      ? this.setState({ data: data[0] })
-      : console.log("No orders have been listed...");
+    const data = await orderService
+      .getOrder(this.props.match.params.id)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        this.props.history.replace("/notFound");
+        console.error(error.response);
+      });
+
+    if (data) {
+      this.setState({ data: data[0] });
+    }
   };
 
-  dltOrder = () => {
-    // const confirm = confirm("ARE YOU SURE?");
-    // if (confirm) {
-      orderService.deleteOrder(this.state.data._id);
-      this.props.history.replace("/orders");
-      return toast(`Order ${this.state.data._id} has been successfuly deleted`);
-    // } else return null;
+  dltOrder = async () => {
+    let data = { ...this.state.data };
+    if (window.confirm("ARE YOU SURE?")) {
+      await orderService.deleteOrder(data._id);
+      data = null; //?
+      await this.props.history.replace("/orders");
+      toast(`Order ${this.state.data._id} has been successfuly deleted`);
+    } else return null;
   };
 
   render() {
@@ -57,7 +67,7 @@ class MyOrder extends Component {
                       return (
                         <div
                           className='card col-12 col-md-6 col-lg-4 mt-3 bg-light text-dark'
-                          key={this.counter}>
+                          key={this.counter++}>
                           <p className='card-header'>{`SN: ${item._id}`}</p>
                           <div className='card-body'>
                             {" "}
@@ -114,7 +124,9 @@ class MyOrder extends Component {
             </div>
             <div className='container'>
               <div className='row'>
-                <NavLink to='/' className='col-6 text-primary text-left'>
+                <NavLink
+                  to={`edit-order/${data._id}`}
+                  className='col-6 text-primary text-left'>
                   <i className='fas fa-edit mr-1'></i> Edit
                 </NavLink>
                 <div

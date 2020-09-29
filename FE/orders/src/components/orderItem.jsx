@@ -1,14 +1,20 @@
 import React from "react";
-const OrderItem = ({ thisParent, deleteBtn: counter }) => {
+const OrderItem = ({ thisParent, counter, id }) => {
   return (
     <React.Fragment>
-      <tr key={counter}>
+      <tr key={id}>
         <td className='td'>{counter + 1}</td>
         <td className='description'>
-          {thisParent.renderInput("description", "Description", counter)}
+          {thisParent.renderInput("description", "Description", id, counter)}
         </td>
         <td className='td2'>
-          {thisParent.renderInput("quantity", "Quantity", counter, "number")}
+          {thisParent.renderInput(
+            "quantity",
+            "Quantity",
+            id,
+            counter,
+            "number"
+          )}
         </td>
         <td className='td2'>{`$${Number(
           (Math.random() * 151).toFixed(2)
@@ -17,7 +23,7 @@ const OrderItem = ({ thisParent, deleteBtn: counter }) => {
           <td className='p-0 m-0 td'>
             <button
               className='text-center btn btn-danger d-block my-auto mx-auto w-100 py-3'
-              onClick={(e) => thisParent.deleteItem(e, counter)}>
+              onClick={(e) => thisParent.deleteItem(e, id)}>
               <i className='fas fa-times mx-auto text-white'></i>
             </button>
           </td>

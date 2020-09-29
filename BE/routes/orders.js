@@ -13,6 +13,9 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const order = await ordersControl.getOrderById(req.params.id);
+  if (!order) {
+    res.status(404);
+  }
   res.send(order);
 });
 

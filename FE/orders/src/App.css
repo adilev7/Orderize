@@ -66,3 +66,25 @@ tr td.description {
   text-decoration: underline;
   color: #be4844 !important;
 }
+
+.container-404 {
+  background-color: rgba(255, 196, 0, 0.116);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.534);
+}
+.h1-404 {
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.363);
+}
+.p-404 {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.363);
+  font-size: 2.5em;
+  font-weight: 300;
+}
+.btn-404 {
+  font-size: 1.5em !important;
+  font-weight: 400 !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+.btn-404:hover {
+  background-color: #f0ad4e !important;
+  color: rgb(252, 242, 213) !important;
+}

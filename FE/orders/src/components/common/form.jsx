@@ -71,19 +71,19 @@ class Form extends Component {
   };
 
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
-  renderInput = (name, label, id, type = "text") => {
+  renderInput = (name, label, counter, type = "text") => {
     let { data, errors } = this.state;
     //inptErr will hold the specific input's error message (if exists);
-    let inptErr = this.handleErrRndr(errors, name, id);
+    let inptErr = this.handleErrRndr(errors, name, counter);
     return (
       <Input
         name={name}
         label={label}
         min={type === "number" ? 1 : null}
-        id={id}
+        id={counter}
         type={type}
         error={inptErr}
-        value={data[name] || data.orderItems[id || 0][name]}
+        value={data[name] || data["orderItems"][counter || 0][name]}
         onChange={this.handleChange}
       />
     );
