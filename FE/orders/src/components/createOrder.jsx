@@ -24,6 +24,7 @@ class CreateOrder extends Form {
   };
   counter = 1;
 
+  /* Joi Schema */
   orderItemsSchema = {
     id: Joi.number(),
     description: Joi.string().min(2).max(30).label("Description"),
@@ -37,7 +38,6 @@ class CreateOrder extends Form {
       .required()
       .items(this.orderItemsSchema),
   };
-
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */
   // "handleErrChange" rearranges the 'error' object of the state, due to changes.
@@ -69,7 +69,7 @@ class CreateOrder extends Form {
       let i = errors.orderItems.find((item) =>
         item.hasOwnProperty(`${name}<${id}>`)
       );
-      return i !== undefined ? i[`${name}<${id}>`] : null;
+      return i ? i[`${name}<${id}>`] : null;
     } else {
       return errors[name];
     }

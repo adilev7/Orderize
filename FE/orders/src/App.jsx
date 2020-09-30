@@ -10,9 +10,11 @@ import Orders from "./components/orders";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import CreateOrder from "./components/createOrder";
+// import CreateOrder from "./components/createOrder";
 import MyOrder from "./components/myOrder";
 import NotFound from "./components/notFound";
+import EditOrder from "./components/editOrder";
+import CreateOrder from "./components/createOrder";
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
           <Route path='/' exact component={Home} />
           <Route path='/orders' exact component={Orders} />
           <Route path='/create-order' component={CreateOrder} />
+          <Route path='/edit-order/:id' component={EditOrder} />
           <Route path='/orders/:id' component={MyOrder} />
           <Route path='/about' component={About} />
           <Route path='*' component={NotFound} />

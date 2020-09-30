@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import orderService from "../services/orderService";
 // import axios from "axios";
@@ -124,11 +124,11 @@ class MyOrder extends Component {
             </div>
             <div className='container'>
               <div className='row'>
-                <NavLink
-                  to={`edit-order/${data._id}`}
+                <Link
+                  to={`/edit-order/${data._id}`}
                   className='col-6 text-primary text-left'>
                   <i className='fas fa-edit mr-1'></i> Edit
-                </NavLink>
+                </Link>
                 <div
                   className='col-6 delete text-danger text-right'
                   onClick={this.dltOrder}>
@@ -136,7 +136,7 @@ class MyOrder extends Component {
                 </div>
               </div>
               <div className='col-12 text-center bg-light text-secondary mt-2 mx-auto'>
-                Last Updated At {data.createdAt}
+                Created At {data.createdAt}
               </div>
             </div>
           </div>

@@ -14,9 +14,8 @@ export async function getOrder(orderId) {
 }
 
 export function editOrder(order) {
-  //Destruct the parameter (order) into _id and ...rest. rename the _id (orderId).
-  const { _id: orderId, ...orderBody } = order;
-  return http.put(`${apiUrl}/orders/${orderId}`, orderBody);
+  const { _id: orderId } = order;
+  return http.put(`${apiUrl}/orders/${orderId}`, order);
 }
 
 export function deleteOrder(orderId) {

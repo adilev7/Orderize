@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 /* import PageHeader from "./common/pageHeader"; */
 import orderService from "../services/orderService";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 class Orders extends Component {
@@ -75,18 +75,18 @@ class Orders extends Component {
                             <i className='fas fa-ellipsis-v'></i>
                           </button>
                           <div className='dropdown-menu p-0 bg-light'>
-                            <NavLink
+                            <Link
                               className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
                               to={`/orders/${order._id}`}>
                               <i className='fas fa-clipboard text-secondary mr-2'></i>
                               View Order
-                            </NavLink>
-                            <NavLink
+                            </Link>
+                            <Link
                               className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
-                              to='/'>
+                              to={`/edit-order/${order._id}`}>
                               <i className='fas fa-pen text-primary mr-2'></i>{" "}
                               Edit Order
-                            </NavLink>
+                            </Link>
                             <div className='dropdown-divider p-0 m-0'></div>
                             <button
                               className='dropdown-item bg-light text-dark pl-3 p-1'

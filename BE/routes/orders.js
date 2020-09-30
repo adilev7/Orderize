@@ -19,12 +19,12 @@ router.get("/:id", async (req, res) => {
   res.send(order);
 });
 
-router.post("/", async (req, res) => {
-  const order = await ordersControl.saveOrders(req.body);
+router.post("/", (req, res) => {
+  const order = ordersControl.saveOrders(req.body);
   res.send(order);
 });
 
-router.put("/", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const order = await ordersControl.updateOrder(req.body);
   res.send(order);
 });

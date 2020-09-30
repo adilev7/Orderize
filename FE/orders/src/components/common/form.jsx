@@ -22,7 +22,7 @@ class Form extends Component {
         : (errors[item.path[0]] = item.message);
     }
     errors["orderItems"] = orderItems;
-
+    console.log("ERRORS", errors);
     return errors;
   };
 
@@ -73,6 +73,7 @@ class Form extends Component {
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
   renderInput = (name, label, id, type = "text") => {
     let { data, errors } = this.state;
+    console.log("renderInput--> ID: ",id,"DATA: ", data);
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return (

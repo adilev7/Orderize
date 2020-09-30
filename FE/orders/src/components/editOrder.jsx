@@ -22,20 +22,45 @@ class EditOrder extends Form {
       orderItems: [],
     },
   };
-  counter = 1;
+  counter = 0;
 
+  /* Joi Schema */
   orderItemsSchema = {
+    _id: Joi.string().allow(""),
     id: Joi.number(),
     description: Joi.string().min(2).max(30).label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
 
   schema = {
+    _id: Joi.string(),
+    __v: Joi.number(),
+    createdAt: Joi.string(),
     custName: Joi.string().min(2).max(30).required().label("Customer Name"),
     orderItems: Joi.array()
       .label("orderItems")
       .required()
       .items(this.orderItemsSchema),
+  };
+
+  //Get the specific order data from the DB;
+  componentDidMount = async () => {
+    let data = await orderService
+      .getOrder(this.props.match.params.id)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        this.props.history.replace("/notFound");
+        console.error(error.response);
+      });
+    if (data) {
+      data = data[0];
+      data.orderItems.map((item) => (item.id = this.counter++));
+      console.log("B4:", data);
+      this.setState({ data });
+      console.log("AFTER:", data);
+    }
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */
@@ -68,7 +93,7 @@ class EditOrder extends Form {
       let i = errors.orderItems.find((item) =>
         item.hasOwnProperty(`${name}<${id}>`)
       );
-      return i !== undefined ? i[`${name}<${id}>`] : null;
+      return i ? i[`${name}<${id}>`] : null;
     } else {
       return errors[name];
     }
@@ -76,10 +101,10 @@ class EditOrder extends Form {
 
   doSubmit = async () => {
     const data = { ...this.state.data };
-    await orderService.createOrder(data);
-    toast("The Order Has Been Listed Successfuly");
-    await this.setState({ data });
+    this.setState({ data });
+    await orderService.editOrder(this.state.data);
     this.props.history.replace("/orders");
+    toast("The Order Has Been Listed Successfuly");
   };
 
   duplicateItem = (e) => {
@@ -103,17 +128,7 @@ class EditOrder extends Form {
     this.setState({ data: { ...data, orderItems } });
   };
 
-  componentDidMount = async () => {
-    const data = await orderService
-      .updateOrder(this.props.match.params.id)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        this.props.history.replace("/notFound");
-        console.error(error.response);
-      });
-      
+  renderTable = () => {
     return (
       <table className='table table-sm col-12 col-md-8 mx-auto table-bordered table-warning table-striped border-2'>
         <caption className='d-none'>Selected Products</caption>
