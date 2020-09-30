@@ -15,13 +15,15 @@ class Form extends Component {
     const errors = {};
     let orderItems = [];
     for (let item of error.details) {
-      item.path[0] === "orderItems"
-        ? orderItems.push({
-            [`${item.path[2]}<${item.path[1]}>`]: item.message,
-          })
-        : (errors[item.path[0]] = item.message);
+      if (item.path[0] === "orderItems") {
+        orderItems.push({
+          [`${item.path[2]}<${item.path[1]}>`]: item.message,
+        });
+        errors["orderItems"] = orderItems;
+      } else {
+        errors[item.path[0]] = item.message;
+      }
     }
-    errors["orderItems"] = orderItems;
     console.log("ERRORS", errors);
     return errors;
   };
@@ -73,10 +75,22 @@ class Form extends Component {
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
   renderInput = (name, label, id, type = "text") => {
     let { data, errors } = this.state;
-    console.log("renderInput--> ID: ",id,"DATA: ", data);
+    console.log("renderInput--> ID: ", id, "DATA: ", data);
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
-    return (
+    return data.hasOwnProperty(name) ? (
+      <Input
+        name={name}
+        label={label}
+        id={id}
+        min={type === "number" ? 0.1 : null}
+        accept={type === "file" ? ".png, .jpg, .jpeg" : null}
+        type={type}
+        error={inptErr}
+        value={data[name]}
+        onChange={this.handleChange}
+      />
+    ) : (
       <Input
         name={name}
         label={label}
@@ -84,11 +98,12 @@ class Form extends Component {
         id={id}
         type={type}
         error={inptErr}
-        value={data[name] || data.orderItems[id || 0][name]}
+        value={data.orderItems[id || 0][name]}
         onChange={this.handleChange}
       />
     );
   };
+
   renderButton = (label) => {
     return (
       <button className='btn btn-primary' disabled={this.validate()}>

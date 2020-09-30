@@ -3,6 +3,7 @@ const app = express();
 const http = require("http").Server(app);
 const mongoose = require("mongoose");
 const cors = require("cors");
+const products = require("./routes/products");
 const orders = require("./routes/orders");
 const users = require("./routes/users");
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/orders", orders);
+app.use("/products", products);
 app.use("/users", users);
 
 //cross origin- 25.08

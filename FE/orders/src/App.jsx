@@ -15,6 +15,10 @@ import MyOrder from "./components/myOrder";
 import NotFound from "./components/notFound";
 import EditOrder from "./components/editOrder";
 import CreateOrder from "./components/createOrder";
+import Products from "./components/products";
+import CreateProduct from "./components/createProduct";
+import EditProduct from "./components/editProduct";
+import MyProduct from "./components/myProduct";
 
 function App() {
   return (
@@ -26,6 +30,10 @@ function App() {
       <main className='container-fluid flex-fill mb-5 min-vh-100'>
         <Switch>
           <Route path='/' exact component={Home} />
+          <Route path='/products' exact component={Products} />
+          <Route path='/create-product' component={CreateProduct} />
+          <Route path='/edit-product/:id' component={EditProduct} />
+          <Route path='/products/:id' component={MyProduct} />
           <Route path='/orders' exact component={Orders} />
           <Route path='/create-order' component={CreateOrder} />
           <Route path='/edit-order/:id' component={EditOrder} />

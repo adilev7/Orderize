@@ -7,7 +7,7 @@ const Input = ({ name, label, error, ...rest }) => {
       <input
         {...rest}
         name={name}
-        className='form-control'
+        className={`${rest.type === "file" ? "form-control-file" : "form-control"}`}
         autoComplete='off'
       />
       {error && <span className='text-danger'>{error}</span>}
