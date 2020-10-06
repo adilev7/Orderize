@@ -5,10 +5,6 @@ const jwt = require("jsonwebtoken");
 const config = require("config"); */
 
 const productSchema = new mongoose.Schema({
-  sn: {
-    type: Number,
-    required: true,
-  },
 
   description: {
     type: String,
@@ -17,9 +13,10 @@ const productSchema = new mongoose.Schema({
     maxlength: 100,
   },
 
-  img: {
-    type: String,
-    maxlength: 100,
+  inStorage: {
+    type: Number,
+    required: true,
+    minlength: 1,
   },
 
   price: {

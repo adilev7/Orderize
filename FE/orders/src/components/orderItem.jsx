@@ -1,18 +1,25 @@
 import React from "react";
-const OrderItem = ({ thisParent, deleteBtn: counter }) => {
+const OrderItem = ({ thisParent, deleteBtn: counter, price }) => {
   return (
     <React.Fragment>
       <tr key={counter}>
         <td className='td'>{counter + 1}</td>
         <td className='description'>
-          {thisParent.renderInput("description", "Description", counter)}
+          {thisParent.renderSearch(
+            "description",
+            counter,
+            "Type Product Name...",
+            "form-control"
+          )}
         </td>
         <td className='td2'>
           {thisParent.renderInput("quantity", "Quantity", counter, "number")}
         </td>
-        <td className='td2'>{`$${Number(
-          (Math.random() * 151).toFixed(2)
-        )}`}</td>
+        <td className='td2'>
+          <span className='px-2 text-left h-25 bg-white input-group-text'>{`$${
+            price || 0
+          }`}</span>
+        </td>
         {counter ? (
           <td className='p-0 m-0 td'>
             <button

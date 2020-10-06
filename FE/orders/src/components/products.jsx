@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-/* import PageHeader from "./common/pageHeader"; */
 import productService from "../services/productService";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -29,6 +28,7 @@ class Products extends Component {
 
   render() {
     const { products } = this.state;
+    console.log(products);
     return (
       <div>
         <div className='container text-center text-md-left'>
@@ -53,10 +53,10 @@ class Products extends Component {
               <caption className='d-none'>list of products</caption>
               <thead className='text-dark'>
                 <tr>
-                  <th scope='col'>No.</th>
                   <th scope='col'>SN</th>
                   <th scope='col'>Description</th>
                   <th scope='col'>Price</th>
+                  <th scope='col'>In Storage</th>
                   <th scope='col'>Date</th>
                 </tr>
               </thead>
@@ -98,10 +98,11 @@ class Products extends Component {
                             </button>
                           </div>
                         </div>
-                        <span>{product.sn}</span>
+                        <span>{product._id}</span>
                       </td>
                       <td>{product.description}</td>
                       <td className='text-center'>{`$${product.price}`}</td>
+                      <td className='text-center'>{product.inStorage}</td>
                       <td>{product.createdAt}</td>
                     </tr>
                   ))}

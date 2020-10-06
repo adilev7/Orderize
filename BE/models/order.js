@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
+const { Product } = require("./product");
 /* const { string } = require("@hapi/joi");
 const jwt = require("jsonwebtoken");
 const config = require("config"); */
@@ -15,6 +16,10 @@ const orderItem = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  // price: {
+  //   type: Number,
+  //   required: true,
+  // },
 });
 
 const orderSchema = new mongoose.Schema({
@@ -26,6 +31,8 @@ const orderSchema = new mongoose.Schema({
   },
 
   orderItems: [orderItem],
+
+  // totalPrice: { type: Number, required: true },
 
   createdAt: {
     type: Date,

@@ -3,19 +3,19 @@ import Joi from "joi-browser";
 import Form from "./common/form";
 import productService from "../services/productService";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 class EditProduct extends Form {
   state = {
     data: {
-      _id: "",
-      sn: 1000,
       description: "",
-      img: "",
-      price: 1,
+      price: undefined,
+      inStorage: undefined,
     },
 
     errors: {
       description: "",
       price: "",
+      inStorage: "",
     },
   };
   counter = 0;
@@ -25,8 +25,10 @@ class EditProduct extends Form {
   schema = {
     _id: Joi.string(),
     __v: Joi.number(),
+    description: Joi.string().required().label("description"),
+    price: Joi.number().min(0).required().label("price"),
+    inStorage: Joi.number().min(0).required().label("inStorage"),
     createdAt: Joi.string(),
-    custName: Joi.string().min(2).max(30).required().label("Customer Name"),
   };
 
   //Get the specific product data from the DB;
@@ -90,7 +92,7 @@ class EditProduct extends Form {
     this.setState({ data });
     await productService.editProduct(this.state.data);
     this.props.history.replace("/products");
-    toast("The Product Has Been Listed Successfuly");
+    toast(`${data.description} Has Been Updated Successfuly`);
   };
 
   // duplicateItem = (e) => {
@@ -120,17 +122,28 @@ class EditProduct extends Form {
         <caption className='d-none'>Selected Products</caption>
         <thead className='text-dark bg-warning'>
           <tr>
-            <th scope='col'>No.</th>
             <th scope='col'>Description</th>
-            <th scope='col'>Quantity</th>
             <th scope='col'>Price</th>
-            <th scope='col'></th>
+            <th scope='col'>In Storage</th>
           </tr>
         </thead>
         <tbody className='text-dark'>
-          {/* {this.state.data.orderItems.map((item) => (
-            <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
-          ))} */}
+          <tr>
+            <td className='td2'>
+              {this.renderInput("description", "Description")}
+            </td>
+            <td className='td3'>
+              <div className='input-group-prepend'>
+                <span className='input-group-text px-1 text-left h-25 w-25 bg-light  border-right-0'>
+                  $
+                </span>
+                {this.renderInput("price", "Price", undefined, "number")}
+              </div>
+            </td>
+            <td className='td3'>
+              {this.renderInput("inStorage", "In Storage", undefined, "number")}
+            </td>
+          </tr>
         </tbody>
       </table>
     );
@@ -145,28 +158,47 @@ class EditProduct extends Form {
           </div>
         </div>
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>
-          <div className='row'>
-            <div className='col-12 col-lg-8 mx-auto'>
-              {this.renderInput("custName", "Customer Name")}
-            </div>
-          </div>
           <div className='row-fluid'>
-            {this.state.data["custName"].length ? (
-              this.renderTable()
-            ) : (
-              <p className='text-center'>
-                <strong>Please provide customer name to continue...</strong>
-              </p>
-            )}
+            <table className='table table-sm col-11 col-md-8 mx-auto table-bordered table-warning table-striped border-2'>
+              <caption className='d-none'>Create New Product</caption>
+              <thead className='text-dark bg-warning'>
+                <tr>
+                  <th scope='col'>Description</th>
+                  <th scope='col'>Price</th>
+                  <th scope='col'>In Storage</th>
+                </tr>
+              </thead>
+              <tbody className='text-dark'>
+                <tr>
+                  <td className='td2'>
+                    {this.renderInput("description", "Description")}
+                  </td>
+                  <td className='td3'>
+                    <div className='input-group-prepend'>
+                      <span className='input-group-text px-1 text-left h-25 w-25 bg-light  border-right-0'>
+                        $
+                      </span>
+                      {this.renderInput("price", "Price", undefined, "number")}
+                    </div>
+                  </td>
+                  <td className='td3'>
+                    {this.renderInput(
+                      "inStorage",
+                      "In Storage",
+                      undefined,
+                      "number"
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className='row mt-5'>
-            <div className='col-10 col-md-8 col-lg-4 mx-auto'>
-              <span className='mr-3 h4'>{`Total Product Price: $${
-                this.state.data["orderItems"][0]["description"].length
-                  ? Number((Math.random() * 151).toFixed(2))
-                  : "0"
-              }`}</span>
-              <span>{this.renderButton("Submit")}</span>
+            <div className='col-10 col-md-8 col-lg-4 mx-auto text-center'>
+              <Link to='/products' className='btn btn-secondary mx-3'>
+                Cancel
+              </Link>
+              <span className='mx-3'>{this.renderButton("Submit")}</span>
             </div>
           </div>
         </form>

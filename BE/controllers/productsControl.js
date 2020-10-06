@@ -4,12 +4,8 @@ const _ = require("lodash");
 /* ORDERS FUNCTIONS */
 
 const getProducts = async () => {
-  const products = await Product.find()
-    .then(() => console.log("PRODUCTS:", products) /* products */)
-    .catch((err) => {
-      console.log("getProducts fail", err);
-      return null;
-    });
+  const products = await Product.find();
+  return products;
 };
 
 const getProductById = async (id) => {
@@ -24,23 +20,22 @@ const getProductById = async (id) => {
 
 const saveProduct = (newProduct) => {
   const product = new Product(
-    _.pick(newProduct, ["SN", "description", "createdAt"])
+    _.pick(newProduct, ["description", "price", "inStorage"])
   );
   product.save();
 };
 
 const updateProduct = async (data) => {
-  let dataToSave = _.pick(data, ["_id", "SN", "description", "createdAt"]);
+  let dataToSave = _.pick(data, [
+    "_id",
+    "description",
+    "inStorage",
+    "createdAt",
+  ]);
   console.log();
-  const product = await Product.updateOne(
-    {
-      _id: dataToSave._id,
-    },
-    dataToSave,
-    {
-      upsert: true,
-    }
-  );
+  const product = await Product.updateOne({ _id: dataToSave._id }, dataToSave, {
+    upsert: true,
+  });
   return product;
 };
 

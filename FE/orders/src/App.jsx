@@ -19,6 +19,7 @@ import Products from "./components/products";
 import CreateProduct from "./components/createProduct";
 import EditProduct from "./components/editProduct";
 import MyProduct from "./components/myProduct";
+// import Search from "./components/search";
 
 function App() {
   return (

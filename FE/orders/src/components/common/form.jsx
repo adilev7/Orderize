@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
+import Search from "../search";
 
 class Form extends Component {
   ///* VALIDATE */
@@ -10,22 +11,23 @@ class Form extends Component {
     const { error } = Joi.validate(this.state.data, this.schema, {
       abortEarly: false,
     });
-    if (!error) return null;
-
+    
     const errors = {};
     let orderItems = [];
-    for (let item of error.details) {
-      if (item.path[0] === "orderItems") {
-        orderItems.push({
-          [`${item.path[2]}<${item.path[1]}>`]: item.message,
-        });
-        errors["orderItems"] = orderItems;
-      } else {
-        errors[item.path[0]] = item.message;
+
+    if (error) {
+      for (let item of error.details) {
+        if (item.path[0] === "orderItems") {
+          orderItems.push({
+            [`${item.path[2]}<${item.path[1]}>`]: item.message,
+          });
+          errors["orderItems"] = orderItems;
+        } else {
+          errors[item.path[0]] = item.message;
+        }
       }
+      return errors;
     }
-    console.log("ERRORS", errors);
-    return errors;
   };
 
   ///* VALIDATE INPUT */
@@ -34,25 +36,27 @@ class Form extends Component {
   //Returns the error message. If no error exists, returns 'null'.
   validateInput = ({ name, value }) => {
     const obj = { [name]: value };
-
+    console.log("NAME", name, "VALUE", value);
     const schema = {
       [name]: this.schema[name]
         ? this.schema[name]
         : this.orderItemsSchema[name],
     };
+    console.log("THIS.SCHEMA", this.schema);
     const { error } = Joi.validate(obj, schema);
+    console.log("VALIDATE INPUT ERROR.DETAILS", error?.details);
     return error ? error.details[0].message : null;
   };
 
   ///* HANDLE CHANGE */
   //Sets the 'errors' object in the state everytime an error changes or doesn't exist.
   //Starts a binding between the data object in the state and the input's value.
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = ({ currentTarget: input }, searchErr) => {
+    console.log("CURRENT TARGET", input);
     const data = { ...this.state.data };
     const errors = { ...this.state.errors };
-
-    const errorMessage = this.validateInput(input);
-
+    const errorMessage = searchErr?.message || this.validateInput(input);
+    console.log(errorMessage);
     this.handleErrChnge(errors, input, errorMessage);
 
     data.hasOwnProperty(input.name)
@@ -75,7 +79,6 @@ class Form extends Component {
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
   renderInput = (name, label, id, type = "text") => {
     let { data, errors } = this.state;
-    console.log("renderInput--> ID: ", id, "DATA: ", data);
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return data.hasOwnProperty(name) ? (
@@ -84,7 +87,6 @@ class Form extends Component {
         label={label}
         id={id}
         min={type === "number" ? 0.1 : null}
-        accept={type === "file" ? ".png, .jpg, .jpeg" : null}
         type={type}
         error={inptErr}
         value={data[name]}
@@ -99,6 +101,25 @@ class Form extends Component {
         type={type}
         error={inptErr}
         value={data.orderItems[id || 0][name]}
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  renderSearch = (name, id, placeholder, className="form-control") => {
+    const { data, errors, dbdata } = this.state;
+    //inptErr will hold the specific input's error message (if exists);
+    let inptErr = this.handleErrRndr(errors, name, id);
+    return (
+      <Search
+        name={name}
+        id={id}
+        placeholder={placeholder}
+        data={dbdata}
+        className={className}
+        error={inptErr}
+        value={data[name]}
+        validate={this.validate}
         onChange={this.handleChange}
       />
     );

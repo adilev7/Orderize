@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const product = productsControl.saveProducts(req.body);
+  const product = productsControl.saveProduct(req.body);
   res.send(product);
 });
 

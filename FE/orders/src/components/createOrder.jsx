@@ -4,6 +4,7 @@ import Form from "./common/form";
 import orderService from "../services/orderService";
 import { toast } from "react-toastify";
 import OrderItem from "./orderItem";
+import productService from "../services/productService";
 class CreateOrder extends Form {
   state = {
     data: {
@@ -13,21 +14,40 @@ class CreateOrder extends Form {
           id: 0,
           description: "",
           quantity: 1,
+          // price: 0,
         },
       ],
+      // totalPrice: 0,
     },
 
     errors: {
       custName: "",
       orderItems: [],
     },
+    dbdata: [],
   };
   counter = 1;
+
+  totalPrice = () => {
+    const prices = this.state.data.orderItems.map(
+      (item) =>
+        this.state.dbdata.find(
+          (dbItem) => dbItem.description === item.description
+        )?.price * item.quantity || 0
+    );
+    return Number(
+      prices
+        .reduce((a, b) => {
+          return a + b;
+        }, 0)
+        .toFixed(2)
+    );
+  };
 
   /* Joi Schema */
   orderItemsSchema = {
     id: Joi.number(),
-    description: Joi.string().min(2).max(30).label("Description"),
+    description: Joi.string().min(6).max(30).label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
 
@@ -37,6 +57,15 @@ class CreateOrder extends Form {
       .label("orderItems")
       .required()
       .items(this.orderItemsSchema),
+    // totalPrice: Joi.any(),
+  };
+
+  componentDidMount = async () => {
+    const { data: dbdata } = await productService.getAllProducts();
+    if (dbdata) {
+      this.setState({ dbdata });
+      console.log("dbdata after set", this.state.dbdata);
+    }
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */
@@ -54,11 +83,13 @@ class CreateOrder extends Form {
         });
       }
     } else {
+      console.log(errors);
       errors.hasOwnProperty(input.name)
         ? delete errors[input.name]
         : (errors.orderItems = errors.orderItems.filter(
             (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
           ));
+      console.log(errors);
     }
   };
 
@@ -79,6 +110,9 @@ class CreateOrder extends Form {
     const data = { ...this.state.data };
     await orderService.createOrder(data);
     this.setState({ data });
+    // this.setState({
+    //   data: { ...data, totalPrice: this.totalPrice() },
+    // });
     this.props.history.replace("/orders");
     toast("The Order Has Been Listed Successfuly");
   };
@@ -87,7 +121,12 @@ class CreateOrder extends Form {
     e.preventDefault();
     let data = { ...this.state.data };
     let orderItems = [...this.state.data.orderItems];
-    let item = { id: this.counter, description: "", quantity: 1 };
+    let item = {
+      id: this.counter,
+      description: "",
+      quantity: 1,
+      /* price: 0 */
+    };
     this.setState({ data: { ...data, orderItems: [...orderItems, item] } });
     this.counter++;
   };
@@ -119,7 +158,18 @@ class CreateOrder extends Form {
         </thead>
         <tbody className='text-dark'>
           {this.state.data.orderItems.map((item) => (
-            <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
+            <OrderItem
+              deleteBtn={item.id}
+              key={item.id}
+              thisParent={this}
+              price={Number(
+                (
+                  this.state.dbdata.find(
+                    (dbItem) => dbItem.description === item.description
+                  )?.price * item.quantity
+                ).toFixed(2)
+              )}
+            />
           ))}
         </tbody>
       </table>
@@ -151,11 +201,7 @@ class CreateOrder extends Form {
           </div>
           <div className='row mt-5'>
             <div className='col-10 col-md-8 col-lg-4 mx-auto'>
-              <span className='mr-3 h4'>{`Total Order Price: $${
-                this.state.data["orderItems"][0]["description"].length
-                  ? Number((Math.random() * 151).toFixed(2))
-                  : "0"
-              }`}</span>
+              <span className='mr-3 h4'>{`Total Order Price: $${this.totalPrice()}`}</span>
               <span>{this.renderButton("Submit")}</span>
             </div>
           </div>

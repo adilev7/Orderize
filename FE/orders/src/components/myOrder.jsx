@@ -41,10 +41,9 @@ class MyOrder extends Component {
     let data = { ...this.state.data };
     if (window.confirm("ARE YOU SURE?")) {
       await orderService.deleteOrder(data._id);
-      data = null; //?
       await this.props.history.replace("/orders");
-      toast(`Order ${this.state.data._id} has been successfuly deleted`);
-    } else return null;
+      toast(`Order number ${this.state.data._id} has been successfuly deleted`);
+    }
   };
 
   render() {

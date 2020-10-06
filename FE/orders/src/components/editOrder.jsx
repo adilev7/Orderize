@@ -4,6 +4,7 @@ import Form from "./common/form";
 import orderService from "../services/orderService";
 import { toast } from "react-toastify";
 import OrderItem from "./orderItem";
+import { Link } from "react-router-dom";
 class EditOrder extends Form {
   state = {
     data: {
@@ -28,7 +29,7 @@ class EditOrder extends Form {
   orderItemsSchema = {
     _id: Joi.string().allow(""),
     id: Joi.number(),
-    description: Joi.string().min(2).max(30).label("Description"),
+    descSelect: Joi.string().min(2).max(30).label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
 
@@ -104,7 +105,7 @@ class EditOrder extends Form {
     this.setState({ data });
     await orderService.editOrder(this.state.data);
     this.props.history.replace("/orders");
-    toast("The Order Has Been Listed Successfuly");
+    toast(`Order Number ${data._id} Has Been Updated Successfuly`);
   };
 
   duplicateItem = (e) => {
@@ -173,14 +174,12 @@ class EditOrder extends Form {
               </p>
             )}
           </div>
-          <div className='row mt-5'>
-            <div className='col-10 col-md-8 col-lg-4 mx-auto'>
-              <span className='mr-3 h4'>{`Total Order Price: $${
-                this.state.data["orderItems"][0]["description"].length
-                  ? Number((Math.random() * 151).toFixed(2))
-                  : "0"
-              }`}</span>
-              <span>{this.renderButton("Submit")}</span>
+          <div className='row mt-3'>
+            <div className='col-10 col-md-8 col-lg-4 mx-auto text-center'>
+              <Link to='/orders' className='btn btn-secondary mx-3'>
+                Cancel
+              </Link>
+              <span className='mx-3'>{this.renderButton("Submit")}</span>
             </div>
           </div>
         </form>
