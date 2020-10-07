@@ -10,8 +10,8 @@ class Search extends Component {
   };
 
   componentDidMount = async () => {
-    const { data } = this.props;
-    data && this.setState({ data });
+    const { data, value } = this.props;
+    data && this.setState({ data, value });
   };
 
   getSuggestions = (value) => {

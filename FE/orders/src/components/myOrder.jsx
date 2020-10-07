@@ -2,22 +2,27 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import orderService from "../services/orderService";
-// import axios from "axios";
+import productService from "../services/productService";
 
 class MyOrder extends Component {
   state = {
     data: {
-      _id: "",
       custName: "",
       orderItems: [
         {
-          _id: "",
-          desription: "",
-          quantity: 0,
+          id: 0,
+          description: "",
+          quantity: 1,
         },
       ],
-      createdAt: "",
+      totalPrice: 0,
     },
+
+    errors: {
+      custName: "",
+      orderItems: [],
+    },
+    products: [],
   };
   counter = 1;
 
@@ -34,6 +39,13 @@ class MyOrder extends Component {
 
     if (data) {
       this.setState({ data: data[0] });
+      const { data: dbdata } = await productService.getAllProducts();
+      const products = dbdata.filter((dbItem) =>
+        this.state.data.orderItems.find(
+          (item) => item.description === dbItem.description
+        )
+      );
+      this.setState({ products });
     }
   };
 
@@ -47,62 +59,75 @@ class MyOrder extends Component {
   };
 
   render() {
-    const { data } = this.state;
+    const { data, products } = this.state;
     console.log(this.state.data);
     return (
       <div className='container mt-5'>
         <div className='row'>
           <div className='card link-warning shadow col-12 col-md-11 mx-auto'>
-            <h5 className='card-header'>{`${data._id}`}</h5>
+            <h3 className='card-header text-secondary text-center'>{`${data._id}`}</h3>
             <div className='card-body col-12'>
-              <ul className='list-group list-group-flush mx-auto'>
-                <li className='list-group-item text-info h5'>
-                  Client: <span className='h5 text-dark'>{data.custName}</span>
+              <ul className='list-group list-group-flush mx-auto text-center'>
+                <li className='list-group-item text-info h4'>
+                  Client:
+                  <span className='h3 text-dark ml-2'>{data.custName}</span>
                 </li>
                 <li className='list-group-item text-info'>
-                  <h5>Products Ordered: </h5>
                   <div className='row'>
                     {data.orderItems.map((item) => {
+                      const product = products.find(
+                        (product) => product.description === item.description
+                      );
                       return (
                         <div
                           className='card col-12 col-md-6 col-lg-4 mt-3 bg-light text-dark'
                           key={this.counter++}>
-                          <p className='card-header'>{`SN: ${item._id}`}</p>
+                          <div className='card-header text-center'>
+                            <Link
+                              title='View Product Details'
+                              to={`/products/${product?._id}`}
+                              className='text-info font-weight-bold'>
+                              {product?._id}
+                            </Link>
+                          </div>
                           <div className='card-body'>
                             {" "}
-                            <ul className='list-group w-100 list-group-flush'>
+                            <ul className='list-group list-group-flush'>
                               <li className='list-group-item'>
-                                Description:{" "}
-                                <span className='text-secondary'>
-                                  {item.description}
+                                <span className='text-secondary font-weight-bold'>
+                                  Description:{" "}
                                 </span>
+                                <div className='text-center mt-1'>
+                                  <Link
+                                    title='View Product Details'
+                                    to={`/products/${product?._id}`}
+                                    className='text-info h5 font-weight-normal'>
+                                    {item.description}
+                                  </Link>
+                                </div>
                               </li>
-                              <li className='list-group-item'>
-                                SN:{" "}
-                                <span className='text-secondary'>
-                                  {item._id}
-                                </span>
-                              </li>
-                              <li className='list-group-item'>
-                                Quantity:{" "}
-                                <span className='text-secondary'>
+                              <li className='list-group-item text-secondary'>
+                                <span className='font-weight-bold'>
+                                  Quantity:
+                                </span>{" "}
+                                <span className='text-info ml-3'>
                                   {item.quantity}
                                 </span>
                               </li>
-                              <li className='list-group-item'>
-                                Unit Price:{" "}
-                                <span className='text-secondary'>
-                                  {`$${Number(
-                                    (Math.random() * 151).toFixed(2)
-                                  )}`}
+                              <li className='list-group-item text-secondary'>
+                                <span className='font-weight-bold'>
+                                  Unit Price:{" "}
+                                </span>
+                                <span className='text-info ml-3'>
+                                  {`$${product?.price}`}
                                 </span>
                               </li>
-                              <li className='list-group-item'>
-                                Total:{" "}
-                                <span className='text-secondary'>
-                                  {`$${Number(
-                                    (Math.random() * 302).toFixed(2)
-                                  )}`}
+                              <li className='list-group-item text-secondary'>
+                                <span className='font-weight-bold'>
+                                  Total:{" "}
+                                </span>
+                                <span className='text-info ml-3'>
+                                  {`$${product?.price * item.quantity}`}
                                 </span>
                               </li>
                             </ul>
@@ -114,9 +139,7 @@ class MyOrder extends Component {
                 </li>
                 <li className='list-group-item col-12 text-center text-info h4'>
                   Total Price:{" "}
-                  <span className='h3 text-dark'>{`$${Number(
-                    (Math.random() * 302 * data.orderItems.length).toFixed(2)
-                  )}`}</span>
+                  <span className='h3 text-dark'>{`$${data.totalPrice}`}</span>
                 </li>
                 {}
               </ul>

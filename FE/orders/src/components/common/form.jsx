@@ -11,7 +11,7 @@ class Form extends Component {
     const { error } = Joi.validate(this.state.data, this.schema, {
       abortEarly: false,
     });
-    
+
     const errors = {};
     let orderItems = [];
 
@@ -51,9 +51,9 @@ class Form extends Component {
   ///* HANDLE CHANGE */
   //Sets the 'errors' object in the state everytime an error changes or doesn't exist.
   //Starts a binding between the data object in the state and the input's value.
-  handleChange = ({ currentTarget: input }, searchErr) => {
+  handleChange = async ({ currentTarget: input }, searchErr) => {
     console.log("CURRENT TARGET", input);
-    const data = { ...this.state.data };
+    const { data } = this.state;
     const errors = { ...this.state.errors };
     const errorMessage = searchErr?.message || this.validateInput(input);
     console.log(errorMessage);
@@ -64,6 +64,8 @@ class Form extends Component {
       : (data.orderItems[input.id || 0][input.name] = input.value);
 
     this.setState({ data, errors });
+    this.totalPrice && this.totalPrice();
+    console.log(data);
   };
 
   ///* HANDLE SUBMIT */
@@ -81,32 +83,23 @@ class Form extends Component {
     let { data, errors } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
-    return data.hasOwnProperty(name) ? (
+    return (
       <Input
         name={name}
         label={label}
         id={id}
-        min={type === "number" ? 0.1 : null}
+        min={type === "number" ? (name === "quantity" ? 1 : 0) : null}
         type={type}
         error={inptErr}
-        value={data[name]}
-        onChange={this.handleChange}
-      />
-    ) : (
-      <Input
-        name={name}
-        label={label}
-        min={type === "number" ? 1 : null}
-        id={id}
-        type={type}
-        error={inptErr}
-        value={data.orderItems[id || 0][name]}
+        value={
+          data[name] || (data.orderItems && data.orderItems[id || 0][name])
+        }
         onChange={this.handleChange}
       />
     );
   };
 
-  renderSearch = (name, id, placeholder, className="form-control") => {
+  renderSearch = (name, id, placeholder, className = "form-control") => {
     const { data, errors, dbdata } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
@@ -118,7 +111,7 @@ class Form extends Component {
         data={dbdata}
         className={className}
         error={inptErr}
-        value={data[name]}
+        value={data[name] || data.orderItems[id || 0][name]}
         validate={this.validate}
         onChange={this.handleChange}
       />

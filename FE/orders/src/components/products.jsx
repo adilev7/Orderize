@@ -12,7 +12,7 @@ class Products extends Component {
     //Get products from DB and store in products array
     const { data } = await productService.getAllProducts();
     data
-      ? this.setState({ products: data })
+      ? this.setState({ products: data.reverse() })
       : toast("No products available...");
   }
 

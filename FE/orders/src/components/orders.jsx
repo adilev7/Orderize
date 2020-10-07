@@ -13,7 +13,7 @@ class Orders extends Component {
     //Get orders from DB and store in orders array
     const { data } = await orderService.getAllOrders();
     data
-      ? this.setState({ orders: data })
+      ? this.setState({ orders: data.reverse() })
       : toast("No orders have been listed...");
   }
 

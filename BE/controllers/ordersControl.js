@@ -19,12 +19,20 @@ const getOrderById = async (id) => {
 };
 
 const saveOrders = (newOrder) => {
-  const order = new Order(_.pick(newOrder, ["custName", "orderItems"]));
+  const order = new Order(
+    _.pick(newOrder, ["custName", "orderItems", "totalPrice"])
+  );
   order.save();
 };
 
 const updateOrder = async (data) => {
-  let dataToSave = _.pick(data, ["_id", "custName", "orderItems"]);
+  let dataToSave = _.pick(data, [
+    "_id",
+    "custName",
+    "orderItems",
+    "totalPrice",
+    "createdAt",
+  ]);
   console.log();
   const orders = await Order.updateOne(
     {

@@ -5,6 +5,7 @@ import orderService from "../services/orderService";
 import { toast } from "react-toastify";
 import OrderItem from "./orderItem";
 import { Link } from "react-router-dom";
+import productService from "../services/productService";
 class EditOrder extends Form {
   state = {
     data: {
@@ -16,32 +17,35 @@ class EditOrder extends Form {
           quantity: 1,
         },
       ],
+      totalPrice: 0,
     },
 
     errors: {
       custName: "",
       orderItems: [],
     },
+    dbdata: [],
   };
   counter = 0;
 
   /* Joi Schema */
   orderItemsSchema = {
-    _id: Joi.string().allow(""),
+    _id: Joi.string(),
     id: Joi.number(),
-    descSelect: Joi.string().min(2).max(30).label("Description"),
+    description: Joi.string().min(6).max(30).label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
 
   schema = {
     _id: Joi.string(),
-    __v: Joi.number(),
-    createdAt: Joi.string(),
     custName: Joi.string().min(2).max(30).required().label("Customer Name"),
     orderItems: Joi.array()
       .label("orderItems")
       .required()
       .items(this.orderItemsSchema),
+    createdAt: Joi.string(),
+    totalPrice: Joi.number(),
+    __v: Joi.number(),
   };
 
   //Get the specific order data from the DB;
@@ -58,9 +62,8 @@ class EditOrder extends Form {
     if (data) {
       data = data[0];
       data.orderItems.map((item) => (item.id = this.counter++));
-      console.log("B4:", data);
-      this.setState({ data });
-      console.log("AFTER:", data);
+      const { data: dbdata } = await productService.getAllProducts();
+      this.setState({ data, dbdata: dbdata || [] });
     }
   };
 
@@ -129,7 +132,27 @@ class EditOrder extends Form {
     this.setState({ data: { ...data, orderItems } });
   };
 
+  totalPrice = () => {
+    const { data, dbdata } = this.state;
+    const prices = data.orderItems.map(
+      (item) =>
+        dbdata.find((dbItem) => dbItem.description === item.description)
+          ?.price * item.quantity || 0
+    );
+    const totalPrice = Number(
+      prices
+        .reduce((a, b) => {
+          return a + b;
+        }, 0)
+        .toFixed(2)
+    );
+    this.setState({ data: { ...data, totalPrice } });
+    console.log(data);
+    return totalPrice;
+  };
+
   renderTable = () => {
+    const { data, dbdata } = this.state;
     return (
       <table className='table table-sm col-12 col-md-8 mx-auto table-bordered table-warning table-striped border-2'>
         <caption className='d-none'>Selected Products</caption>
@@ -143,8 +166,19 @@ class EditOrder extends Form {
           </tr>
         </thead>
         <tbody className='text-dark'>
-          {this.state.data.orderItems.map((item) => (
-            <OrderItem deleteBtn={item.id} key={item.id} thisParent={this} />
+          {data.orderItems.map((item) => (
+            <OrderItem
+              deleteBtn={item.id}
+              key={item.id}
+              thisParent={this}
+              price={Number(
+                (
+                  dbdata.find(
+                    (dbItem) => dbItem.description === item.description
+                  )?.price * item.quantity
+                ).toFixed(2)
+              )}
+            />
           ))}
         </tbody>
       </table>
@@ -152,6 +186,7 @@ class EditOrder extends Form {
   };
 
   render() {
+    const { data } = this.state;
     return (
       <div className='container-fluid mt-2'>
         <div className='row'>
@@ -166,7 +201,8 @@ class EditOrder extends Form {
             </div>
           </div>
           <div className='row-fluid'>
-            {this.state.data["custName"].length ? (
+            {data.custName.length ||
+            data.orderItems.find((item) => item.description) ? (
               this.renderTable()
             ) : (
               <p className='text-center'>
@@ -175,6 +211,7 @@ class EditOrder extends Form {
             )}
           </div>
           <div className='row mt-3'>
+            <span className='col-12 text-center mt-1 mb-5 h4'>{`Total Order Price: $${data.totalPrice}`}</span>
             <div className='col-10 col-md-8 col-lg-4 mx-auto text-center'>
               <Link to='/orders' className='btn btn-secondary mx-3'>
                 Cancel

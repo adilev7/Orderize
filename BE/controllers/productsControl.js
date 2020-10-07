@@ -20,7 +20,7 @@ const getProductById = async (id) => {
 
 const saveProduct = (newProduct) => {
   const product = new Product(
-    _.pick(newProduct, ["description", "price", "inStorage"])
+    _.pick(newProduct, ["description", "price", "inStorage", "createdAt"])
   );
   product.save();
 };

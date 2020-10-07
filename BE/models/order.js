@@ -32,7 +32,7 @@ const orderSchema = new mongoose.Schema({
 
   orderItems: [orderItem],
 
-  // totalPrice: { type: Number, required: true },
+  totalPrice: { type: Number, required: true },
 
   createdAt: {
     type: Date,

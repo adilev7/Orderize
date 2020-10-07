@@ -5,6 +5,7 @@ import orderService from "../services/orderService";
 import { toast } from "react-toastify";
 import OrderItem from "./orderItem";
 import productService from "../services/productService";
+import { Link } from "react-router-dom";
 class CreateOrder extends Form {
   state = {
     data: {
@@ -14,10 +15,9 @@ class CreateOrder extends Form {
           id: 0,
           description: "",
           quantity: 1,
-          // price: 0,
         },
       ],
-      // totalPrice: 0,
+      totalPrice: 0,
     },
 
     errors: {
@@ -27,22 +27,6 @@ class CreateOrder extends Form {
     dbdata: [],
   };
   counter = 1;
-
-  totalPrice = () => {
-    const prices = this.state.data.orderItems.map(
-      (item) =>
-        this.state.dbdata.find(
-          (dbItem) => dbItem.description === item.description
-        )?.price * item.quantity || 0
-    );
-    return Number(
-      prices
-        .reduce((a, b) => {
-          return a + b;
-        }, 0)
-        .toFixed(2)
-    );
-  };
 
   /* Joi Schema */
   orderItemsSchema = {
@@ -57,7 +41,7 @@ class CreateOrder extends Form {
       .label("orderItems")
       .required()
       .items(this.orderItemsSchema),
-    // totalPrice: Joi.any(),
+    totalPrice: Joi.number().required(),
   };
 
   componentDidMount = async () => {
@@ -110,9 +94,6 @@ class CreateOrder extends Form {
     const data = { ...this.state.data };
     await orderService.createOrder(data);
     this.setState({ data });
-    // this.setState({
-    //   data: { ...data, totalPrice: this.totalPrice() },
-    // });
     this.props.history.replace("/orders");
     toast("The Order Has Been Listed Successfuly");
   };
@@ -125,7 +106,6 @@ class CreateOrder extends Form {
       id: this.counter,
       description: "",
       quantity: 1,
-      /* price: 0 */
     };
     this.setState({ data: { ...data, orderItems: [...orderItems, item] } });
     this.counter++;
@@ -143,7 +123,27 @@ class CreateOrder extends Form {
     this.setState({ data: { ...data, orderItems } });
   };
 
+  totalPrice = () => {
+    const { data, dbdata } = this.state;
+    const prices = data.orderItems.map(
+      (item) =>
+        dbdata.find((dbItem) => dbItem.description === item.description)
+          ?.price * item.quantity || 0
+    );
+    const totalPrice = Number(
+      prices
+        .reduce((a, b) => {
+          return a + b;
+        }, 0)
+        .toFixed(2)
+    );
+    this.setState({ data: { ...data, totalPrice } });
+    console.log(data);
+    return totalPrice;
+  };
+
   renderTable = () => {
+    const { data, dbdata } = this.state;
     return (
       <table className='table table-sm col-12 col-md-8 mx-auto table-bordered table-warning table-striped border-2'>
         <caption className='d-none'>Selected Products</caption>
@@ -157,14 +157,14 @@ class CreateOrder extends Form {
           </tr>
         </thead>
         <tbody className='text-dark'>
-          {this.state.data.orderItems.map((item) => (
+          {data.orderItems.map((item) => (
             <OrderItem
               deleteBtn={item.id}
               key={item.id}
               thisParent={this}
               price={Number(
                 (
-                  this.state.dbdata.find(
+                  dbdata.find(
                     (dbItem) => dbItem.description === item.description
                   )?.price * item.quantity
                 ).toFixed(2)
@@ -177,6 +177,7 @@ class CreateOrder extends Form {
   };
 
   render() {
+    const { data } = this.state;
     return (
       <div className='container-fluid mt-2'>
         <div className='row'>
@@ -191,7 +192,8 @@ class CreateOrder extends Form {
             </div>
           </div>
           <div className='row-fluid'>
-            {this.state.data["custName"].length ? (
+            {data.custName.length ||
+            data.orderItems.find((item) => item.description) ? (
               this.renderTable()
             ) : (
               <p className='text-center'>
@@ -199,10 +201,13 @@ class CreateOrder extends Form {
               </p>
             )}
           </div>
-          <div className='row mt-5'>
-            <div className='col-10 col-md-8 col-lg-4 mx-auto'>
-              <span className='mr-3 h4'>{`Total Order Price: $${this.totalPrice()}`}</span>
-              <span>{this.renderButton("Submit")}</span>
+          <div className='row mt-3'>
+            <span className='col-12 text-center mt-1 mb-5 h4'>{`Total Order Price: $${data.totalPrice}`}</span>
+            <div className='col-10 col-md-8 col-lg-4 mx-auto text-center'>
+              <Link to='/orders' className='btn btn-secondary mx-3'>
+                Cancel
+              </Link>
+              <span className='mx-3'>{this.renderButton("Submit")}</span>
             </div>
           </div>
         </form>
