@@ -1,7 +1,7 @@
 const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
-/* const jwt = require("jsonwebtoken");
-const config = require("config"); */
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -33,13 +33,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-/* userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, admin: this.admin },
     config.get("jwtKey")
   );
   return token;
-}; */
+};
 
 const User = mongoose.model("User", userSchema);
 

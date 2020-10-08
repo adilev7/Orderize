@@ -43,33 +43,30 @@ class Search extends Component {
   };
 
   onChange = (e, { newValue }) => {
+    const { errMsg } = this.props;
     e.persist();
     const { id, name } = this.props;
     console.log(e.currentTarget);
     console.log(newValue);
-    const message = this.getSuggestions(newValue)
-      ? "The product you are searching for does not exist"
-      : "";
+    // const message = this.getSuggestions(newValue)
+    //   ? "The product you are searching for does not exist"
+    //   : "";
 
     this.setState({ value: newValue });
     const obj = { currentTarget: { id, name, value: newValue } };
-    let searchErr = { id, name, message };
+    let searchErr = {
+      id,
+      name,
+      message: this.getSuggestions(newValue) ? errMsg : "",
+    };
     if (e.currentTarget.name === name) {
-      console.log(JSON.stringify(searchErr));
       this.props.onChange(e, searchErr);
-      this.props.validate(e, searchErr);
     } else {
       this.props.onChange(obj);
     }
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
-    console.log(
-      "onSuggestionsFetchRequested {value}",
-      value,
-      "getSuggestions",
-      this.getSuggestions(value)
-    );
     this.setState({
       suggestions: this.getSuggestions(value),
     });
@@ -104,9 +101,6 @@ class Search extends Component {
           renderSuggestion={this.renderSuggestion}
           inputProps={inputProps}
         />
-        {/* {data.find((product) => product === value) && error && (
-          <span className='text-danger'>{error}</span>
-        )} */}
         {error && <span className='text-danger'>{error}</span>}
       </React.Fragment>
     );

@@ -9,6 +9,7 @@ const OrderItem = ({ thisParent, deleteBtn: counter, price }) => {
             "description",
             counter,
             "Type Product Name...",
+            "The product you are searching for does not exist",
             "form-control"
           )}
         </td>

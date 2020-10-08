@@ -99,7 +99,7 @@ class Form extends Component {
     );
   };
 
-  renderSearch = (name, id, placeholder, className = "form-control") => {
+  renderSearch = (name, id, placeholder, errMsg, className = "form-control") => {
     const { data, errors, dbdata } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
@@ -111,6 +111,7 @@ class Form extends Component {
         data={dbdata}
         className={className}
         error={inptErr}
+        errMsg={errMsg}
         value={data[name] || data.orderItems[id || 0][name]}
         validate={this.validate}
         onChange={this.handleChange}

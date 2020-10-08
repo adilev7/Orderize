@@ -6,15 +6,29 @@ import { toast } from "react-toastify";
 class Products extends Component {
   state = {
     products: [],
+    filterProducts: [],
   };
 
   async componentDidMount() {
     //Get products from DB and store in products array
-    const { data } = await productService.getAllProducts();
-    data
-      ? this.setState({ products: data.reverse() })
+    const { data: products } = await productService.getAllProducts();
+    products
+      ? this.setState({ products, filterProducts: products.reverse() })
       : toast("No products available...");
   }
+
+  handleChange = (e) => {
+    let filterProducts = [...this.state.filterProducts];
+    const { products } = this.state;
+    const inputValue = e.currentTarget.value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+    filterProducts = products.filter(
+      (item) =>
+        item.description.toLowerCase().slice(0, inputLength) === inputValue ||
+        item._id.toLowerCase().slice(0, inputLength) === inputValue
+    );
+    this.setState({ filterProducts });
+  };
 
   dltProduct = async (productId) => {
     let products = [...this.state.products];
@@ -27,18 +41,35 @@ class Products extends Component {
   };
 
   render() {
-    const { products } = this.state;
+    const { filterProducts, products } = this.state;
     console.log(products);
     return (
       <div>
-        <div className='container text-center text-md-left'>
-          <div className='row mt-5'>
-            <div className='col-10 ml-md-5 mx-auto'>
-              <h4 className='mb-5 mt-3 heading'>
+        <div className='container'>
+          <div className='row ml-md-3'>
+            <div className='col-12 mt-4'>
+              <h4 className='heading text-secondary'>
                 {products.length
                   ? `There are currently ${products.length} products listed.`
                   : "Loading Products..."}
               </h4>
+            </div>
+          </div>
+          <div className='row mt-5 ml-md-3'>
+            <div className='input-group col-12 col-md-7 text-center'>
+              <div class='input-group-prepend'>
+                <span class='input-group-text bg-white' id='basic-addon1'>
+                  <i className='fas fa-search text-secondary'></i>
+                </span>
+              </div>
+              <input
+                type='text'
+                className='form-control text-secondary border-left-0'
+                placeholder='Search by Description or SN. '
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className='col-12 col-md-3 mt-4 mt-md-0 mr-md-4 ml-md-auto text-md-right text-left'>
               <Link to='/create-product'>
                 <button className='btn btn-primary'>
                   <i className='fas fa-plus-circle'></i> Create new product
@@ -61,8 +92,8 @@ class Products extends Component {
                 </tr>
               </thead>
               <tbody className='text-dark bg-light'>
-                {products.length > 0 &&
-                  products.map((product) => (
+                {filterProducts.length > 0 &&
+                  filterProducts.map((product) => (
                     <tr key={product._id}>
                       <td className='p-0'>
                         <div className='btn-group'>
