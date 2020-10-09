@@ -19,7 +19,6 @@ class Form extends Component {
       for (let item of error.details) {
         if (item.path[0] === "orderItems") {
           orderItems.push({
-            [`${item.path[2]}<${item.path[1]}>`]: item.message,
           });
           errors["orderItems"] = orderItems;
         } else {
@@ -73,19 +72,20 @@ class Form extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
-    this.setState({ errors: errors || { custName: "", orderItems: [] } });
+    this.setState({ errors: errors || {} });
     if (errors) return;
     this.doSubmit();
   };
 
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
-  renderInput = (name, label, id, type = "text") => {
+  renderInput = (name, label, id, placeholder, type = "text") => {
     let { data, errors } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return (
       <Input
         name={name}
+        placeholder={placeholder}
         label={label}
         id={id}
         min={type === "number" ? (name === "quantity" ? 1 : 0) : null}
@@ -99,7 +99,13 @@ class Form extends Component {
     );
   };
 
-  renderSearch = (name, id, placeholder, errMsg, className = "form-control") => {
+  renderSearch = (
+    name,
+    id,
+    placeholder,
+    errMsg,
+    className = "form-control"
+  ) => {
     const { data, errors, dbdata } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);

@@ -6,6 +6,7 @@ const cors = require("cors");
 const products = require("./routes/products");
 const orders = require("./routes/orders");
 const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 mongoose;
 require("./config/connectDB")()
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/orders", orders);
 app.use("/products", products);
 app.use("/users", users);
+app.use("/auth", auth);
 
 //cross origin- 25.08
 app.get("/", (req, res) => res.json("ok"));

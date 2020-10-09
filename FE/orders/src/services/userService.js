@@ -1,4 +1,4 @@
-/* import http from "./httpService";
+import http from "./httpService";
 import { apiUrl } from "../config.json";
 import jwtDecode from "jwt-decode";
 
@@ -34,4 +34,4 @@ export default {
   logout,
   getJwt,
 };
- */
+
