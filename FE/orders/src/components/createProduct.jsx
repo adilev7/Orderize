@@ -77,13 +77,20 @@ class CreateProduct extends Form {
                       <span className='input-group-text px-1 text-left h-25 w-25 bg-light  border-right-0'>
                         $
                       </span>
-                      {this.renderInput("price", "Price", undefined, "number")}
+                      {this.renderInput(
+                        "price",
+                        "Price",
+                        undefined,
+                        undefined,
+                        "number"
+                      )}
                     </div>
                   </td>
                   <td className='td3'>
                     {this.renderInput(
                       "inStorage",
                       "In Storage",
+                      undefined,
                       undefined,
                       "number"
                     )}

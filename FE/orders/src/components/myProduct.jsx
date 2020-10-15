@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import productService from "../services/productService";
+import userService from "../services/userService";
 // import axios from "axios";
 
 class MyProduct extends Component {
@@ -40,12 +41,13 @@ class MyProduct extends Component {
   };
 
   render() {
+    const currentUser = userService.getCurrentUser();
     const { data } = this.state;
-    console.log(this.state.data);
+    const lastPage = this.props.location.state.from;
     return (
       <div className='container mt-5'>
-        <div className='row'>
-          <div className='card link-warning shadow col-12 col-md-6 mx-auto'>
+        <div className='row mt-5'>
+          <div className='card link-warning shadow col-12 col-md-6 mx-auto my-5'>
             <h5 className='card-header text-center'>{`${data._id}`}</h5>
             <div className='card-body col-12'>
               <ul className='list-group list-group-flush mx-auto'>
@@ -65,22 +67,33 @@ class MyProduct extends Component {
               </ul>
             </div>
             <div className='container'>
-              <div className='row'>
-                <Link
-                  to={`/edit-product/${data._id}`}
-                  className='col-6 text-primary text-left'>
-                  <i className='fas fa-edit mr-1'></i> Edit
-                </Link>
-                <div
-                  className='col-6 delete text-danger text-right'
-                  onClick={this.dltProduct}>
-                  <i className='fas fa-trash mr-1'></i> Delete
+              {currentUser.admin && (
+                <div className='row'>
+                  <Link
+                    to={`/edit-product/${data._id}`}
+                    className='col-6 text-primary text-left'>
+                    <i className='fas fa-edit mr-1'></i> Edit
+                  </Link>
+                  <div
+                    className='col-6 delete text-danger text-right'
+                    onClick={this.dltProduct}>
+                    <i className='fas fa-trash mr-1'></i> Delete
+                  </div>
                 </div>
-              </div>
+              )}
               <div className='col-12 text-center bg-light text-secondary mt-2 mx-auto'>
                 Created At {data.createdAt}
               </div>
             </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className="col-12 col-md-6 mx-auto p-0">
+            <Link
+              to={lastPage}
+              className='col-4 btn btn-warning text-white mt-4'>
+              <i className='fas fa-arrow-left mr-1'></i> Back
+            </Link>
           </div>
         </div>
       </div>

@@ -16,16 +16,14 @@ const getUserById = async (id) => {
 };
 
 const saveUsers = (newUser) => {
-  const user = new User(
-    _.pick(newUser, ["name", "email", "password", "admin"])
-  );
+  const user = new User(_.pick(newUser, ["email", "password", "admin"]));
   user.save();
 };
 
 const updateUser = async (data) => {
-  let dataToSave = _.pick(data, ["_id", "name", "email", "password", "admin"]);
+  let dataToSave = _.pick(data, ["_id", "email", "password", "admin"]);
   console.log();
-  const users = await User.updateOne(
+  const user = await User.updateOne(
     {
       _id: dataToSave._id,
     },
@@ -34,14 +32,14 @@ const updateUser = async (data) => {
       upsert: true,
     }
   );
-  return users;
+  return user;
 };
 
 const deleteUserById = async (id) => {
-  const users = await User.deleteOne({
+  const user = await User.deleteOne({
     _id: id,
   });
-  return users;
+  return user;
 };
 
 module.exports = {

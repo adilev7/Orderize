@@ -17,6 +17,7 @@ class EditOrder extends Form {
           quantity: 1,
         },
       ],
+      starred: false,
       totalPrice: 0,
     },
 
@@ -44,6 +45,7 @@ class EditOrder extends Form {
       .required()
       .items(this.orderItemsSchema),
     createdAt: Joi.string(),
+    starred: Joi.boolean().required(),
     totalPrice: Joi.number(),
     __v: Joi.number(),
   };
@@ -147,7 +149,6 @@ class EditOrder extends Form {
         .toFixed(2)
     );
     this.setState({ data: { ...data, totalPrice } });
-    console.log(data);
     return totalPrice;
   };
 
@@ -191,7 +192,7 @@ class EditOrder extends Form {
       <div className='container-fluid mt-2'>
         <div className='row'>
           <div className='col-10 text-center heading mx-auto my-5'>
-            <h1 className='display-3'>New Order</h1>
+            <h1 className='display-3'>Edit Order</h1>
           </div>
         </div>
         <form noValidate autoComplete='off' onSubmit={this.handleSubmit}>

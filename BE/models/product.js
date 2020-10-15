@@ -42,16 +42,16 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-/* function validateOrder(order) {
-  const schema = Joi.object({
-    name: Joi.string().min(2).max(255).required(),
-    email: Joi.string().min(6).max(255).required().email(),
-    password: Joi.string().min(6).max(1024).required(),
-    biz: Joi.boolean().required(),
-  });
+// function validateProduct(product) {
+//   const schema = Joi.object({
+//     description: Joi.string().min(2).max(255).required(),
+//     inStorage: Joi.number().required(),
+//     price: Joi.number().required(),
+//     createdAt: Joi.string(),
+//   });
 
-  return schema.validate(order);
-} */
+//   return schema.validate(product);
+// }
 
 /* function validateCards(data) {
   const schema = Joi.object({
@@ -61,5 +61,4 @@ const Product = mongoose.model("Product", productSchema);
   return schema.validate(data);
 } */
 exports.Product = Product;
-/* exports.validate = validateOrder;
-exports.validateCards = validateCards; */
+

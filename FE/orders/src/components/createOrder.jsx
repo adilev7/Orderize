@@ -48,7 +48,6 @@ class CreateOrder extends Form {
     const { data: dbdata } = await productService.getAllProducts();
     if (dbdata) {
       this.setState({ dbdata });
-      console.log("dbdata after set", this.state.dbdata);
     }
   };
 
@@ -67,13 +66,11 @@ class CreateOrder extends Form {
         });
       }
     } else {
-      console.log(errors);
       errors.hasOwnProperty(input.name)
         ? delete errors[input.name]
         : (errors.orderItems = errors.orderItems.filter(
             (item) => !item.hasOwnProperty(`${input.name}<${input.id}>`)
           ));
-      console.log(errors);
     }
   };
 
@@ -81,7 +78,7 @@ class CreateOrder extends Form {
   // "handleErrRndr" returns the relevant error message in order to match its relevant input.
   handleErrRndr = (errors, name, id) => {
     if (name !== "custName") {
-      let i = errors.orderItems.find((item) =>
+      let i = errors.orderItems?.find((item) =>
         item.hasOwnProperty(`${name}<${id}>`)
       );
       return i ? i[`${name}<${id}>`] : null;
@@ -138,7 +135,6 @@ class CreateOrder extends Form {
         .toFixed(2)
     );
     this.setState({ data: { ...data, totalPrice } });
-    console.log(data);
     return totalPrice;
   };
 

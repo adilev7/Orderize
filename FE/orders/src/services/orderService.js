@@ -4,13 +4,8 @@ import { apiUrl } from "../config.json";
 //compare the http (axios) methods to the server side endpoints
 
 export async function getOrder(orderId) {
-  // try {
   const order = await http.get(`${apiUrl}/orders/${orderId}`);
-  console.log("ddddd");
   return order;
-  // } catch (err) {
-  //   console.log("error", err);
-  // }
 }
 
 export function editOrder(order) {

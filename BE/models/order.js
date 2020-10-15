@@ -16,10 +16,6 @@ const orderItem = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // price: {
-  //   type: Number,
-  //   required: true,
-  // },
 });
 
 const orderSchema = new mongoose.Schema({
@@ -33,6 +29,8 @@ const orderSchema = new mongoose.Schema({
   orderItems: [orderItem],
 
   totalPrice: { type: Number, required: true },
+
+  important: { type: Boolean, required: true },
 
   createdAt: {
     type: Date,

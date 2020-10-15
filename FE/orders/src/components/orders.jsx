@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import orderService from "../services/orderService";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import userService from "../services/userService";
+import starredService from "../services/starredService";
 
 class Orders extends Component {
   state = {
@@ -10,24 +12,120 @@ class Orders extends Component {
   };
 
   async componentDidMount() {
-    //Get orders from DB and store in orders array
-    const { data: orders } = await orderService.getAllOrders();
+    const currentUser = userService.getCurrentUser();
+    // const { pathname } = this.props.location;
+    let { data: orders } = await orderService.getAllOrders();
+    let { data: starred } = await starredService.getStarredByUser(
+      currentUser._id
+    );
+    starred = starred[0];
+
+    // for (let order of orders) {
+    // if (order._id === starred.orders?.map((orderId) => orderId)) {
+    //   order.starred = true;
+    // }
+    orders.map((order) => {
+      let cc = starred?.orders.map((orderId) => {
+        if (orderId === order._id) {
+          order.starred = true;
+          console.log(order);
+        }
+        return null;
+      });
+      return cc;
+    });
+
     orders
       ? this.setState({ orders, filterOrders: orders.reverse() })
       : toast("No orders have been listed...");
+
+    // if (pathname === "/orders/starred") {
+    //   let filterOrders = [...this.state.filterOrders];
+    //   filterOrders = filterOrders.filter((item) => item.starred);
+    //   this.setState({ filterOrders });
+    // }
   }
 
-  handleChange = (e) => {
+  handleChange = async (e, orderId) => {
     let filterOrders = [...this.state.filterOrders];
     const { orders } = this.state;
-    const inputValue = e.currentTarget.value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-    filterOrders = orders.filter(
-      (item) =>
-        item.custName.toLowerCase().slice(0, inputLength) === inputValue ||
-        item._id.toLowerCase().slice(0, inputLength) === inputValue
-    );
-    this.setState({ filterOrders });
+
+    if (e.currentTarget.localName === "input") {
+      const inputValue = e.currentTarget.value.trim().toLowerCase();
+      const inputLength = inputValue.length;
+      filterOrders = orders.filter(
+        (item) =>
+          item.custName.toLowerCase().slice(0, inputLength) === inputValue ||
+          item._id.toLowerCase().slice(0, inputLength) === inputValue
+      );
+    }
+
+    if (
+      e.currentTarget.innerText === "Mark As Important" ||
+      e.currentTarget.innerText === "Mark As Unimportant"
+    ) {
+      const order = filterOrders.find((item) => item._id === orderId);
+
+      order.important = !order.important;
+
+      orderService.editOrder(order);
+    }
+
+    if (
+      e.currentTarget.textContent === "Star" ||
+      e.currentTarget.textContent === "Unstar"
+    ) {
+      const { _id: user } = userService.getCurrentUser();
+      let { data: starred } = await starredService.getStarredByUser(user);
+      starred = starred[0];
+      let orderInState = this.findInState(filterOrders, orderId);
+      let orders;
+      if (!starred) {
+        orderInState.starred = true;
+        starredService.createStarred({ user, orders: [orderId] });
+        if (!filterOrders.length) {
+          filterOrders[0] = 0;
+        }
+        this.setState({ filterOrders });
+        return;
+      }
+
+      const starredOrderId = this.findInStarred(starred, orderId);
+
+      if (starred && !starred.orders.length) {
+        orderInState.starred = true;
+        orders = [orderId];
+      }
+
+      if (!starredOrderId) {
+        orderInState.starred = true;
+        orders = [...starred.orders, orderId];
+      }
+
+      if (starredOrderId && starredOrderId === orderInState._id) {
+        orderInState.starred = !orderInState.starred;
+        orders = starred?.orders.filter((id) => id !== orderId);
+      }
+
+      starredService.editStarred({
+        _id: starred._id,
+        user,
+        orders,
+      });
+
+      if (!filterOrders.length) {
+        filterOrders[0] = 0;
+      }
+      this.setState({ filterOrders });
+    }
+  };
+
+  findInState = (filterOrders, orderId) => {
+    return filterOrders.find((order) => order._id === orderId && order);
+  };
+
+  findInStarred = (starred, orderId) => {
+    return starred?.orders.find((id) => id === orderId && id);
   };
 
   dltOrder = async (orderId) => {
@@ -42,6 +140,8 @@ class Orders extends Component {
 
   render() {
     const { filterOrders, orders } = this.state;
+    // const { pathname } = this.props.location;
+    const currentUser = userService.getCurrentUser();
     return (
       <div>
         <div className='container'>
@@ -56,8 +156,8 @@ class Orders extends Component {
           </div>
           <div className='row mt-5 ml-md-3'>
             <div className='input-group col-12 col-md-7 text-center'>
-              <div class='input-group-prepend'>
-                <span class='input-group-text bg-white' id='basic-addon1'>
+              <div className='input-group-prepend'>
+                <span className='input-group-text bg-white' id='basic-addon1'>
                   <i className='fas fa-search text-secondary'></i>
                 </span>
               </div>
@@ -69,11 +169,13 @@ class Orders extends Component {
               />
             </div>
             <div className='col-12 col-md-3 mt-4 mt-md-0 mr-md-4 ml-md-auto text-md-right text-left'>
-              <Link to='/create-order'>
-                <button className='btn btn-primary'>
-                  <i className='fas fa-plus-circle'></i> Create new order
-                </button>
-              </Link>
+              {currentUser?.admin && (
+                <Link to='/create-order'>
+                  <button className='btn btn-primary'>
+                    <i className='fas fa-plus-circle'></i> Create new order
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -91,18 +193,33 @@ class Orders extends Component {
                 </tr>
               </thead>
               <tbody className='text-dark bg-light'>
-                {filterOrders.length > 0 &&
+                {filterOrders[0] === 0 ? (
+                  <tr>
+                    <td
+                      className='h5 font-weight-normal text-secondary text-center'
+                      colSpan='5'>
+                      No orders match your search...
+                    </td>
+                  </tr>
+                ) : (
                   filterOrders.map((order) => (
-                    <tr key={order._id}>
+                    <tr
+                      key={order._id}
+                      className={order.important ? "table-danger" : null}>
                       <td className='p-0'>
                         <div className='btn-group'>
                           <button
                             type='button'
-                            className='btn btn-light mr-3 ml-0 rounded h-100 py-3 my-0 dropdown-toggle-split'
+                            className={`btn btn-light mr-3 ml-0 rounded h-100 py-3 my-0 dropdown-toggle-split ${
+                              order.important && "bg-red"
+                            }`}
                             data-toggle='dropdown'
                             aria-haspopup='true'
                             aria-expanded='false'>
-                            <i className='fas fa-ellipsis-v'></i>
+                            <i
+                              className={`fas fa-ellipsis-v ${
+                                order.starred && "text-warning"
+                              }`}></i>
                           </button>
                           <div className='dropdown-menu p-0 bg-light'>
                             <Link
@@ -111,31 +228,78 @@ class Orders extends Component {
                               <i className='fas fa-clipboard text-secondary mr-2'></i>
                               View Order
                             </Link>
-                            <Link
-                              className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
-                              to={`/edit-order/${order._id}`}>
-                              <i className='fas fa-pen text-primary mr-2'></i>{" "}
-                              Edit Order
-                            </Link>
-                            <div className='dropdown-divider p-0 m-0'></div>
-                            <button
-                              className='dropdown-item bg-light text-dark pl-3 p-1'
-                              onClick={() => {
-                                this.dltOrder(order._id);
-                              }}>
-                              <i className='fas fa-trash text-danger mr-2'></i>{" "}
-                              Delete Order
-                            </button>
+                            {currentUser.admin && order.important && (
+                              <button
+                                className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                onClick={(e) =>
+                                  this.handleChange(e, order._id)
+                                }>
+                                <i className='fas fa-exclamation-circle text-danger mr-2'></i>
+                                Mark As Unimportant
+                              </button>
+                            )}
+                            {currentUser.admin && !order.important && (
+                              <button
+                                className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                onClick={(e) =>
+                                  this.handleChange(e, order._id)
+                                }>
+                                <i className='fas fa-exclamation-circle text-secondary mr-2'></i>
+                                Mark As Important
+                              </button>
+                            )}
+                            {order.starred ? (
+                              <button
+                                className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                onClick={(e) =>
+                                  this.handleChange(e, order._id)
+                                }>
+                                <i className='fas fa-star text-warning mr-2'></i>
+                                Unstar
+                              </button>
+                            ) : (
+                              <button
+                                className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                onClick={(e) =>
+                                  this.handleChange(e, order._id)
+                                }>
+                                <i className='far fa-star text-warning mr-2'></i>
+                                Star
+                              </button>
+                            )}
+
+                            {currentUser?.admin && (
+                              <React.Fragment>
+                                <Link
+                                  className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                  to={`/edit-order/${order._id}`}>
+                                  <i className='fas fa-pen text-primary mr-2'></i>{" "}
+                                  Edit Order
+                                </Link>
+                                <div className='dropdown-divider p-0 m-0'></div>
+                                <button
+                                  className='dropdown-item bg-light text-dark pl-3 p-1'
+                                  onClick={() => {
+                                    this.dltOrder(order._id);
+                                  }}>
+                                  <i className='fas fa-trash text-danger mr-2'></i>{" "}
+                                  Delete Order
+                                </button>
+                              </React.Fragment>
+                            )}
                           </div>
                         </div>
                         <span>{order._id}</span>
                       </td>
                       <td>{order.custName}</td>
-                      <td className='text-center'>{order.orderItems.length}</td>
+                      <td className='text-center'>
+                        {order.orderItems?.length}
+                      </td>
                       <td>{`$${order.totalPrice}`}</td>
                       <td>{order.createdAt}</td>
                     </tr>
-                  ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -26,8 +26,6 @@ class Search extends Component {
               item.description.toLowerCase().slice(0, inputLength) ===
               inputValue
           );
-    } else {
-      console.log("EMPTY");
     }
   };
 
@@ -37,7 +35,6 @@ class Search extends Component {
   };
 
   renderSuggestion = (suggestion) => {
-    console.log(suggestion);
     const { name } = this.props;
     return <div>{suggestion[name]}</div>;
   };
@@ -46,8 +43,6 @@ class Search extends Component {
     const { errMsg } = this.props;
     e.persist();
     const { id, name } = this.props;
-    console.log(e.currentTarget);
-    console.log(newValue);
     // const message = this.getSuggestions(newValue)
     //   ? "The product you are searching for does not exist"
     //   : "";
@@ -80,7 +75,15 @@ class Search extends Component {
 
   render() {
     const { value, suggestions } = this.state;
-    const { name, id, placeholder, error, validate, ...rest } = this.props;
+    const {
+      name,
+      id,
+      placeholder,
+      error,
+      errMsg,
+      validate,
+      ...rest
+    } = this.props;
 
     const inputProps = {
       ...rest,

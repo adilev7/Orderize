@@ -34,21 +34,21 @@ router.delete("/:id", async (req, res) => {
   res.send(product);
 });
 /* ITEMS ENDPOINTS */
-router.get("/:orderId/:itemId", async (req, res) => {
-  const productItem = await productsControl.getItemById(
-    req.params.productId,
-    req.params.itemId
-  );
-  res.send(productItem);
-});
+// router.get("/:orderId/:itemId", async (req, res) => {
+//   const productItem = await productsControl.getItemById(
+//     req.params.productId,
+//     req.params.itemId
+//   );
+//   res.send(productItem);
+// });
 
-router.put("/:productId/:itemId", async (req, res) => {
-  const product = await productsControl.deleteItemById(
-    req.params.productId,
-    req.params.itemId
-  );
-  res.send(product);
-});
+// router.put("/:productId/:itemId", async (req, res) => {
+//   const product = await productsControl.deleteItemById(
+//     req.params.productId,
+//     req.params.itemId
+//   );
+//   res.send(product);
+// });
 
 /* router.put("/:orderId", async (req, res) => {
   const order = await ordersControl.addItem(req.params.orderId, req.body);

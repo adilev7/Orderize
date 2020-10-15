@@ -3,6 +3,29 @@ nav {
   background-color: rgb(255, 153, 0);
   box-shadow: 4px 4px 15px 10px rgba(0, 0, 0, 0.2);
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.nav-user:hover .nav-admin {
+  background-color: rgb(0, 195, 255);
+  color: white;
+}
+
+.starred:hover .starNum {
+  background-color: rgba(255, 187, 0, 0.61) !important;
+}
+
+.nav-admin {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgb(255, 153, 0);
+  font-weight: bold;
+  font-size: 0.6em;
+  border-radius: 50%;
+  padding: 0.5em;
+}
+
 .navbar-brand {
   font-family: "Times New Roman", Times, serif;
   font-size: 2em !important;
@@ -23,7 +46,6 @@ nav {
   font-family: "Times New Roman", Times, serif;
   font-weight: 500;
   letter-spacing: -1px;
-  /* text-shadow: 3px 2px 5px rgba(0, 0, 0, 0.5); */
 }
 
 /* FOOTER */
@@ -45,6 +67,12 @@ nav {
   font-weight: 500;
   letter-spacing: -1px;
 }
+
+/* Orders/Products Page */
+/* .bg-disabled {
+  background-color: rgba(92, 92, 92, 0.116) !important;
+  color: rgb(134, 134, 134) !important;
+} */
 
 /* 404 Page */
 .container-404 {
@@ -166,4 +194,19 @@ tr td.td3 {
 
 .react-autosuggest__suggestion--highlighted {
   background-color: #ddd;
+}
+.bg-red {
+  background-color: rgb(240, 200, 200) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+/* .bg-red{
+  background-color: rgb(255, 137, 137) !important;
+} */
+.bg-red:hover {
+  background-color: rgb(223, 185, 185) !important;
+}
+.bg-red:active {
+  background-color: rgb(231, 191, 191) !important;
+  box-shadow: 0 0 0 3px rgba(190, 160, 160, 0.301) !important;
 }

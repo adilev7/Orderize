@@ -14,7 +14,13 @@ const OrderItem = ({ thisParent, deleteBtn: counter, price }) => {
           )}
         </td>
         <td className='td2'>
-          {thisParent.renderInput("quantity", "Quantity", counter, "number")}
+          {thisParent.renderInput(
+            "quantity",
+            "Quantity",
+            counter,
+            undefined,
+            "number"
+          )}
         </td>
         <td className='td2'>
           <span className='px-2 text-left h-25 bg-white input-group-text'>{`$${

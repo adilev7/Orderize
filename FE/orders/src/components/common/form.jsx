@@ -18,8 +18,7 @@ class Form extends Component {
     if (error) {
       for (let item of error.details) {
         if (item.path[0] === "orderItems") {
-          orderItems.push({
-          });
+          orderItems.push({});
           errors["orderItems"] = orderItems;
         } else {
           errors[item.path[0]] = item.message;
@@ -35,15 +34,12 @@ class Form extends Component {
   //Returns the error message. If no error exists, returns 'null'.
   validateInput = ({ name, value }) => {
     const obj = { [name]: value };
-    console.log("NAME", name, "VALUE", value);
     const schema = {
       [name]: this.schema[name]
         ? this.schema[name]
         : this.orderItemsSchema[name],
     };
-    console.log("THIS.SCHEMA", this.schema);
     const { error } = Joi.validate(obj, schema);
-    console.log("VALIDATE INPUT ERROR.DETAILS", error?.details);
     return error ? error.details[0].message : null;
   };
 
@@ -51,11 +47,9 @@ class Form extends Component {
   //Sets the 'errors' object in the state everytime an error changes or doesn't exist.
   //Starts a binding between the data object in the state and the input's value.
   handleChange = async ({ currentTarget: input }, searchErr) => {
-    console.log("CURRENT TARGET", input);
     const { data } = this.state;
     const errors = { ...this.state.errors };
     const errorMessage = searchErr?.message || this.validateInput(input);
-    console.log(errorMessage);
     this.handleErrChnge(errors, input, errorMessage);
 
     data.hasOwnProperty(input.name)
@@ -64,7 +58,6 @@ class Form extends Component {
 
     this.setState({ data, errors });
     this.totalPrice && this.totalPrice();
-    console.log(data);
   };
 
   ///* HANDLE SUBMIT */
@@ -78,13 +71,21 @@ class Form extends Component {
   };
 
   /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
-  renderInput = (name, label, id, placeholder, type = "text") => {
+  renderInput = (
+    name,
+    label,
+    id,
+    placeholder,
+    type = "text",
+    className = "form-control"
+  ) => {
     let { data, errors } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return (
       <Input
         name={name}
+        className={className}
         placeholder={placeholder}
         label={label}
         id={id}

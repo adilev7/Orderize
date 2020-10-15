@@ -34,7 +34,7 @@ class Signin extends Form {
     const { email, password } = this.state.data;
     try {
       await userService.login(email, password);
-      window.location = "/";
+      window.location = "/orders";
     } catch (error) {
       if (error.response && error.response.status === 400) {
         this.setState({ errors: { email: error.response.data } });
@@ -44,22 +44,34 @@ class Signin extends Form {
 
   render() {
     if (userService.getCurrentUser()) {
-      return <Redirect to='/' />;
+      return <Redirect to='/orders' />;
     }
 
     return (
-      <div className='container'>
-        <h2>"Sign in to Real App"</h2>
+      <div className='container text-center'>
+        <h2 className='heading display-4 mt-5 mb-4'>Sign in to ORDERIZE</h2>
         <div className='row'>
-          <div className='col-12'>
-            <p>Hope on sailor, we've got you covered!</p>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-lg-6'>
+          <div className='col-lg-5 mx-auto'>
             <form onSubmit={this.handleSubmit} noValidate autoComplete='off'>
-              {this.renderInput("email", "Email", "email")}
-              {this.renderInput("password", "Password", "password")}
+              <div className='mb-4'>
+                {this.renderInput(
+                  "email",
+                  "Email",
+                  undefined,
+                  "Email",
+                  "email"
+                )}
+              </div>
+              <div className='mb-4'>
+                {this.renderInput(
+                  "password",
+                  "Password",
+                  undefined,
+                  "Password",
+                  "password"
+                )}
+              </div>
+
               {this.renderButton("Sign In")}
             </form>
           </div>

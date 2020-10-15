@@ -1,53 +1,51 @@
 const express = require("express");
 const _ = require("lodash");
-const ordersControl = require("../controllers/ordersControl");
-/* const bcrypt = require("bcrypt"); */
-/* const _ = require("lodash"); */
+const starredControl = require("../controllers/starredControl");
 const router = express.Router();
 
-/* ORDERS ENDPOINTS */
-router.get("/", async (req, res) => {
-  const orders = await ordersControl.getOrders();
-  res.send(orders);
-});
+/* PRODUCTS ENDPOINTS */
+// router.get("/", async (req, res) => {
+//   const starred = await starredControl.getStarred();
+//   res.send(starred);
+// });
 
 router.get("/:id", async (req, res) => {
-  const order = await ordersControl.getOrderById(req.params.id);
-  if (!order) {
+  const starred = await starredControl.getStarredByUser(req.params.id);
+  if (!starred) {
     res.status(404);
   }
-  res.send(order);
+  res.send(starred);
 });
 
 router.post("/", (req, res) => {
-  const order = ordersControl.saveOrders(req.body);
-  res.send(order);
+  const starred = starredControl.saveStarred(req.body);
+  res.send(starred);
 });
 
 router.put("/:id", async (req, res) => {
-  const order = await ordersControl.updateOrder(req.body);
-  res.send(order);
+  const starred = await starredControl.updateStarred(req.body);
+  res.send(starred);
 });
 
-router.delete("/:id", async (req, res) => {
-  const order = await ordersControl.deleteOrderById(req.params.id);
-  res.send(order);
-});
+// router.delete("/:id", async (req, res) => {
+//   const starred = await starredControl.deleteStarredById(req.params.id, req.body);
+//   res.send(starred);
+// });
 /* ITEMS ENDPOINTS */
 // router.get("/:orderId/:itemId", async (req, res) => {
-//   const orderItem = await ordersControl.getItemById(
-//     req.params.orderId,
+//   const starredItem = await starredControl.getItemById(
+//     req.params.starredId,
 //     req.params.itemId
 //   );
-//   res.send(orderItem);
+//   res.send(starredItem);
 // });
 
-// router.put("/:orderId/:itemId", async (req, res) => {
-//   const order = await ordersControl.deleteItemById(
-//     req.params.orderId,
+// router.put("/:starredId/:itemId", async (req, res) => {
+//   const starred = await starredControl.deleteItemById(
+//     req.params.starredId,
 //     req.params.itemId
 //   );
-//   res.send(order);
+//   res.send(starred);
 // });
 
 /* router.put("/:orderId", async (req, res) => {

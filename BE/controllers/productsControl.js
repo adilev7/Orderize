@@ -46,15 +46,6 @@ const deleteProductById = async (id) => {
   return product;
 };
 
-/* ITEMS FUNCTIONS */
-
-/* const getItemById = async (orderId, itemId) => {
-  const orders = await getOrderById(orderId);
-  const orderItems = orders[0]["orderItems"];
-  const orderItem = await orderItems.find((item) => item._id == itemId);
-  return orderItem;
-}; */
-
 module.exports = {
   getProducts,
   getProductById,

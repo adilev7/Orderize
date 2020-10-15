@@ -15,7 +15,6 @@ const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
       {...rest}
       //props is props of the <Route>
       render={(props) => {
-        console.log("88888888" + JSON.stringify(props));
         //render the Route only if the user is not logged in OR (if the ProtectedRoute's 'biz' is true AND not a biz user).
         if (!currentUser || (rest.admin && !currentUser.admin)) {
           return (

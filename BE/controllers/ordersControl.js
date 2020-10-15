@@ -20,7 +20,7 @@ const getOrderById = async (id) => {
 
 const saveOrders = (newOrder) => {
   const order = new Order(
-    _.pick(newOrder, ["custName", "orderItems", "totalPrice"])
+    _.pick(newOrder, ["custName", "orderItems", "important", "totalPrice"])
   );
   order.save();
 };
@@ -31,9 +31,9 @@ const updateOrder = async (data) => {
     "custName",
     "orderItems",
     "totalPrice",
+    "important",
     "createdAt",
   ]);
-  console.log();
   const orders = await Order.updateOne(
     {
       _id: dataToSave._id,
@@ -45,6 +45,7 @@ const updateOrder = async (data) => {
   );
   return orders;
 };
+
 
 const deleteOrderById = async (id) => {
   const orders = await Order.deleteOne({
@@ -62,40 +63,40 @@ const deleteOrderById = async (id) => {
   return orderItem;
 }; */
 
-const deleteItemById = async (orderId, itemId) => {
-  const order = await Order.updateOne(
-    {
-      _id: orderId,
-    },
-    {
-      $pull: {
-        orderItems: {
-          _id: itemId,
-        },
-      },
-    }
-  );
-  return order;
-};
+// const deleteItemById = async (orderId, itemId) => {
+//   const order = await Order.updateOne(
+//     {
+//       _id: orderId,
+//     },
+//     {
+//       $pull: {
+//         orderItems: {
+//           _id: itemId,
+//         },
+//       },
+//     }
+//   );
+//   return order;
+// };
 
-const addItem = async (orderId, orderItem) => {
-  const order = await Order.updateOne(
-    {
-      _id: orderId,
-    },
-    {
-      $push: {
-        orderItems: {
-          orderItem,
-        },
-      },
-    },
-    {
-      upsert: true,
-    }
-  );
-  return order;
-};
+// const addItem = async (orderId, orderItem) => {
+//   const order = await Order.updateOne(
+//     {
+//       _id: orderId,
+//     },
+//     {
+//       $push: {
+//         orderItems: {
+//           orderItem,
+//         },
+//       },
+//     },
+//     {
+//       upsert: true,
+//     }
+//   );
+//   return order;
+// };
 
 module.exports = {
   getOrders,
@@ -103,7 +104,7 @@ module.exports = {
   saveOrders,
   updateOrder,
   deleteOrderById,
-  /*   getItemById, */
-  deleteItemById,
-  addItem,
+  // getItemById,
+  // deleteItemById,
+  // addItem,
 };

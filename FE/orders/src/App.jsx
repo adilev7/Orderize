@@ -4,13 +4,11 @@ import { ToastContainer } from "react-toastify";
 
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
-import Home from "./components/home";
 import About from "./components/about";
 import Orders from "./components/orders";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-// import CreateOrder from "./components/createOrder";
 import MyOrder from "./components/myOrder";
 import NotFound from "./components/notFound";
 import EditOrder from "./components/editOrder";
@@ -20,12 +18,10 @@ import CreateProduct from "./components/createProduct";
 import EditProduct from "./components/editProduct";
 import MyProduct from "./components/myProduct";
 import ProtectedRoute from "./components/common/protectedRoute";
-import AdminSignUp from "./components/adminSignup";
 import Signup from "./components/signup";
 import Signin from "./components/signin";
 import Logout from "./components/logout";
 import userService from "./services/userService";
-// import Search from "./components/search";
 
 class App extends Component {
   state = {};
@@ -45,8 +41,24 @@ class App extends Component {
         </header>
         <main className='container-fluid flex-fill mb-5 min-vh-100'>
           <Switch>
-            <Route path='/' exact component={Home} />
-            <Route path='/products' exact component={Products} />
+            {/* Orders */}
+            <ProtectedRoute path='/' exact component={Orders} />
+            <ProtectedRoute path='/orders' exact component={Orders} />
+            <Route path='/orders/starred' exact component={Orders} />
+            <ProtectedRoute
+              path='/create-order'
+              component={CreateOrder}
+              admin={true}
+            />
+            <ProtectedRoute
+              path='/edit-order/:id'
+              component={EditOrder}
+              admin={true}
+            />
+            <ProtectedRoute path='/orders/:id' component={MyOrder} />
+
+            {/* Products */}
+            <ProtectedRoute path='/products' exact component={Products} />
             <ProtectedRoute
               path='/create-product'
               component={CreateProduct}
@@ -57,15 +69,18 @@ class App extends Component {
               component={EditProduct}
               admin={true}
             />
-            <Route path='/products/:id' component={MyProduct} />
-            <Route path='/orders' exact component={Orders} />
-            <Route path='/create-order' component={CreateOrder} />
-            <Route path='/edit-order/:id' component={EditOrder} />
-            <Route path='/orders/:id' component={MyOrder} />
-            <Route path='/admin-signup' component={AdminSignUp} />
-            <Route path='/logout' component={Logout} />
+            <ProtectedRoute path='/products/:id' component={MyProduct} />
+
+            {/* USER */}
             <Route path='/signup' component={Signup} />
             <Route path='/signin' component={Signin} />
+            <ProtectedRoute path='/logout' component={Logout} />
+            <ProtectedRoute
+              path='/create-user'
+              component={Signup}
+              admin={true}
+            />
+
             <Route path='/about' component={About} />
             <Route path='*' component={NotFound} />
           </Switch>
