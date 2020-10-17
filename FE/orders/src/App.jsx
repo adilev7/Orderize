@@ -21,23 +21,14 @@ import ProtectedRoute from "./components/common/protectedRoute";
 import Signup from "./components/signup";
 import Signin from "./components/signin";
 import Logout from "./components/logout";
-import userService from "./services/userService";
 
 class App extends Component {
-  state = {};
-
-  componentDidMount() {
-    const user = userService.getCurrentUser();
-    this.setState({ user });
-  }
-
   render() {
-    const { user } = this.state;
     return (
       <div className='d-flex flex-column footer'>
         <ToastContainer />
         <header>
-          <Navbar user={user} />
+          <Navbar />
         </header>
         <main className='container-fluid flex-fill mb-5 min-vh-100'>
           <Switch>

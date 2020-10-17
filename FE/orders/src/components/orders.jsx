@@ -126,13 +126,22 @@ class Orders extends Component {
   };
 
   dltOrder = async (orderId) => {
+    const { _id: user } = userService.getCurrentUser();
+    let { data: starred } = await starredService.getStarredByUser(user);
+    starred = starred[0];
     let orders = [...this.state.orders];
     if (window.confirm("ARE YOU SURE?")) {
+      starred.orders = starred.orders.filter((id) => id !== orderId);
+      starredService.editStarred({
+        _id: starred._id,
+        user,
+        orders: starred.orders,
+      });
       await orderService.deleteOrder(orderId);
       orders = orders.filter((item) => item._id !== orderId);
       toast(`Order ${orderId} has been successfuly deleted`);
+      this.setState({ orders, filterOrders: orders });
     }
-    this.setState({ orders, filterOrders: orders });
   };
 
   render() {

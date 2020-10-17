@@ -1,15 +1,23 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
+import starredService from "../services/starredService";
 // import orderService from "../services/orderService";
 import userService from "../services/userService";
 class Navbar extends Component {
-  state = {};
+  state = {
+    starred: 0,
+  };
 
+  componentDidMount = async () => {
+    const { _id: userId } = userService.getCurrentUser();
+    let { data: starred } = await starredService.getStarredByUser(userId);
+    starred = starred[0]?.orders.length;
+    this.setState({ starred });
+  };
 
   render() {
-    const currentUser = userService.getCurrentUser(); //-->
-    //                                                          } ONE IS IRRELEVANT
-    const { user } = this.props; //-->
+    const currentUser = userService.getCurrentUser();
+
     return (
       <nav className='navbar navbar-expand-md navbar-dark sticky-top py-0'>
         <Link className='navbar-brand my-0 mr-5' to='/orders'>
@@ -39,11 +47,9 @@ class Navbar extends Component {
               </NavLink>
             </li>
           </ul>
-          <ul className='navbar-nav ml-auto mr-4' >
-            {user ? (
-              <li
-                className='nav-item dropdown nav-user'
-               >
+          <ul className='navbar-nav ml-auto mr-4'>
+            {currentUser ? (
+              <li className='nav-item dropdown nav-user'>
                 <span
                   className='nav-link dropdown-toggle cursor-pointer'
                   id='dropdown04'
@@ -72,6 +78,7 @@ class Navbar extends Component {
                     to='/orders/starred'>
                     <i className='fas fa-star mr-1'></i>Starred{" "}
                     <span className='starNum rounded-circle px-1 ml-5 bg-warning text-dark'>
+                      {this.state.starred}
                     </span>
                   </NavLink>
                   <NavLink
