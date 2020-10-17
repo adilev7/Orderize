@@ -210,3 +210,8 @@ tr td.td3 {
   background-color: rgb(231, 191, 191) !important;
   box-shadow: 0 0 0 3px rgba(190, 160, 160, 0.301) !important;
 }
+
+.table-responsive {
+  padding: 2% 0 10% 0 !important;
+  overflow-y: hidden !important;
+}

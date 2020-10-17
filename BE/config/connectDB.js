@@ -8,8 +8,9 @@ const connectionOptions = {
   db: process.env.MONGO_DB || "",
 };
 
-function createURI({ username, password, host, db }) {
-  return `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
+function createURI({ host, db }) {
+  // return `mongodb+srv://${username}:${password}@${host}/${db}?retryWrites=true&w=majority`;
+  return `mongodb://${host}/${db}?retryWrites=true&w=majority`;
 }
 
 function connect(options = connectionOptions) {

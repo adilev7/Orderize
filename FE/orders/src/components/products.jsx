@@ -39,7 +39,7 @@ class Products extends Component {
       products = products.filter((item) => item._id !== productId);
       toast(`Product ${productId} has been successfuly deleted`);
     }
-    this.setState({ products });
+    this.setState({ products, filterProducts: products });
   };
 
   render() {
@@ -53,7 +53,7 @@ class Products extends Component {
               <h4 className='heading text-secondary'>
                 {products.length
                   ? `There are currently ${products.length} products listed.`
-                  : "Loading Products..."}
+                  : ""}
               </h4>
             </div>
           </div>
@@ -96,6 +96,15 @@ class Products extends Component {
                 </tr>
               </thead>
               <tbody className='text-dark bg-light'>
+                {!filterProducts.length && (
+                  <tr>
+                    <td
+                      className='h5 font-weight-normal text-secondary text-center'
+                      colSpan='5'>
+                      No products yet...
+                    </td>
+                  </tr>
+                )}
                 {filterProducts[0] === 0 ? (
                   <tr>
                     <td

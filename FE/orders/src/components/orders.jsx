@@ -35,9 +35,7 @@ class Orders extends Component {
       return cc;
     });
 
-    orders
-      ? this.setState({ orders, filterOrders: orders.reverse() })
-      : toast("No orders have been listed...");
+    this.setState({ orders, filterOrders: orders.reverse() });
 
     // if (pathname === "/orders/starred") {
     //   let filterOrders = [...this.state.filterOrders];
@@ -112,12 +110,11 @@ class Orders extends Component {
         user,
         orders,
       });
-
-      if (!filterOrders.length) {
-        filterOrders[0] = 0;
-      }
-      this.setState({ filterOrders });
     }
+    if (!filterOrders.length) {
+      filterOrders[0] = 0;
+    }
+    this.setState({ filterOrders });
   };
 
   findInState = (filterOrders, orderId) => {
@@ -135,7 +132,7 @@ class Orders extends Component {
       orders = orders.filter((item) => item._id !== orderId);
       toast(`Order ${orderId} has been successfuly deleted`);
     }
-    this.setState({ orders });
+    this.setState({ orders, filterOrders: orders });
   };
 
   render() {
@@ -150,7 +147,7 @@ class Orders extends Component {
               <h4 className='heading text-secondary'>
                 {orders.length
                   ? `There are currently ${orders.length} orders listed.`
-                  : "Loading Orders..."}
+                  : ""}
               </h4>
             </div>
           </div>
@@ -181,7 +178,7 @@ class Orders extends Component {
         </div>
         <div className='row'>
           <div className='table-responsive my-5'>
-            <table className='table col-10  mx-auto table-bordered table-warning border-2'>
+            <table className='table col-10 mx-auto table-bordered table-warning border-2'>
               <caption className='d-none'>list of orders</caption>
               <thead className='text-dark'>
                 <tr>
@@ -193,6 +190,15 @@ class Orders extends Component {
                 </tr>
               </thead>
               <tbody className='text-dark bg-light'>
+                {!filterOrders.length && (
+                  <tr>
+                    <td
+                      className='h5 font-weight-normal text-secondary text-center'
+                      colSpan='5'>
+                      No orders yet...
+                    </td>
+                  </tr>
+                )}
                 {filterOrders[0] === 0 ? (
                   <tr>
                     <td
@@ -205,9 +211,9 @@ class Orders extends Component {
                   filterOrders.map((order) => (
                     <tr
                       key={order._id}
-                      className={order.important ? "table-danger" : null}>
+                      className={order.important ? "table-danger" : undefined}>
                       <td className='p-0'>
-                        <div className='btn-group'>
+                        <div className='btn-group dropright'>
                           <button
                             type='button'
                             className={`btn btn-light mr-3 ml-0 rounded h-100 py-3 my-0 dropdown-toggle-split ${

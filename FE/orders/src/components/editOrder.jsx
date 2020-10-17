@@ -17,7 +17,8 @@ class EditOrder extends Form {
           quantity: 1,
         },
       ],
-      starred: false,
+      starred: "",
+      important: "",
       totalPrice: 0,
     },
 
@@ -45,7 +46,8 @@ class EditOrder extends Form {
       .required()
       .items(this.orderItemsSchema),
     createdAt: Joi.string(),
-    starred: Joi.boolean().required(),
+    starred: Joi.boolean(),
+    important: Joi.boolean(),
     totalPrice: Joi.number(),
     __v: Joi.number(),
   };
@@ -96,7 +98,7 @@ class EditOrder extends Form {
   // "handleErrRndr" returns the relevant error message in order to match its relevant input.
   handleErrRndr = (errors, name, id) => {
     if (name !== "custName") {
-      let i = errors.orderItems.find((item) =>
+      let i = errors.orderItems?.find((item) =>
         item.hasOwnProperty(`${name}<${id}>`)
       );
       return i ? i[`${name}<${id}>`] : null;

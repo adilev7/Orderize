@@ -17,6 +17,7 @@ class CreateOrder extends Form {
           quantity: 1,
         },
       ],
+      important: false,
       totalPrice: 0,
     },
 
@@ -41,6 +42,7 @@ class CreateOrder extends Form {
       .label("orderItems")
       .required()
       .items(this.orderItemsSchema),
+    important: Joi.boolean().required(),
     totalPrice: Joi.number().required(),
   };
 

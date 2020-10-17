@@ -1,9 +1,7 @@
 const { Order } = require("../models/order");
 const _ = require("lodash");
 
-/* ORDERS FUNCTIONS */
-
-const getOrders = async () => {
+const getAllOrders = async () => {
   const orders = await Order.find();
   return orders;
 };
@@ -46,7 +44,6 @@ const updateOrder = async (data) => {
   return orders;
 };
 
-
 const deleteOrderById = async (id) => {
   const orders = await Order.deleteOne({
     _id: id,
@@ -54,57 +51,10 @@ const deleteOrderById = async (id) => {
   return orders;
 };
 
-/* ITEMS FUNCTIONS */
-
-/* const getItemById = async (orderId, itemId) => {
-  const orders = await getOrderById(orderId);
-  const orderItems = orders[0]["orderItems"];
-  const orderItem = await orderItems.find((item) => item._id == itemId);
-  return orderItem;
-}; */
-
-// const deleteItemById = async (orderId, itemId) => {
-//   const order = await Order.updateOne(
-//     {
-//       _id: orderId,
-//     },
-//     {
-//       $pull: {
-//         orderItems: {
-//           _id: itemId,
-//         },
-//       },
-//     }
-//   );
-//   return order;
-// };
-
-// const addItem = async (orderId, orderItem) => {
-//   const order = await Order.updateOne(
-//     {
-//       _id: orderId,
-//     },
-//     {
-//       $push: {
-//         orderItems: {
-//           orderItem,
-//         },
-//       },
-//     },
-//     {
-//       upsert: true,
-//     }
-//   );
-//   return order;
-// };
-
 module.exports = {
-  getOrders,
+  getAllOrders,
   getOrderById,
   saveOrders,
   updateOrder,
   deleteOrderById,
-  // getItemById,
-  // deleteItemById,
-  // addItem,
 };
