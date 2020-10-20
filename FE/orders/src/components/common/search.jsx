@@ -39,17 +39,18 @@ class Search extends Component {
   };
 
   onChange = (e, { newValue }) => {
-    const { errMsg } = this.props;
-    const { id, name } = this.props;
-    
+    const { errMsg, id, name } = this.props;
     e.persist();
+
     this.setState({ value: newValue });
+
     const obj = { currentTarget: { id, name, value: newValue } };
     let searchErr = {
       id,
       name,
       message: this.getSuggestions(newValue) ? errMsg : "",
     };
+
     if (e.currentTarget.name === name) {
       this.props.onChange(e, searchErr);
     } else {

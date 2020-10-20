@@ -121,7 +121,7 @@ class Form extends Component {
         className={className}
         error={inptErr}
         errMsg={errMsg}
-        value={data[name]}
+        value={data[name] || data.orderItems[id || 0][name]}
         validate={this.validate}
         onChange={this.handleChange}
       />
