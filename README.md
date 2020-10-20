@@ -24,16 +24,16 @@ In the development process I took into account simplicity and accessibility to t
 Make sure none of the ports 3900 and 3000 in your localhost are taken.
 1. Download the zip file on (https://github.com/adilev7/orders) under the 'Code' button, then extract the files.
 2. Open the main folder (orders-master) with your code editor.
-3. Split CMD into two windows then type in one of them:
+3. Split CMD into two windows then type in one of them:  
          ```
-          cd BE 
+          cd BE  
+          ```  
           ```
+          npm i  
+          ```  
           ```
-          npm i
-          ```
-          ```
-          npm run watch
-         ```
+          npm run watch  
+         ```  
          
 4. In the other window of the CMD type:  
          ``` 
