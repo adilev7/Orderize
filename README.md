@@ -51,16 +51,16 @@ Make sure none of the ports 3900 and 3000 in your localhost are taken.
 • Sign in using the exisiting regular user:  
   Email: b@b.com  
   Password: 123456  
+       
+   As a regular user you can:  
+       - View all the orders and products listed by the admin users, and get down to specifics of each order/product.  
+       - Mark any order you want as starred and it will be saved as starred the next time you log in.  
   
-       As a regular user you can: 
-       - View all the orders and products listed by the admin users, and get down to specifics of each order/product.
-       - Mark any order you want as starred and it will be saved as starred the next time you log in.
-
-•Sign in using the existing admin user:  
+• Sign in using the existing admin user:  
   Email: a@a.com  
   Password: 123456  
-  
-        As an admin user you can also view every order/product and mark an order as starred like a regular user.
+
+   As an admin user you can also view every order/product and mark an order as starred like a regular user.
         On top of that you can also:
         - Create, Update and Delete orders/products.  
         - Create a new user and give permissions as an admin user or as a regular user.  
