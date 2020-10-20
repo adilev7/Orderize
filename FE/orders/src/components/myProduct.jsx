@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import productService from "../services/productService";
 import userService from "../services/userService";
-// import axios from "axios";
 
 class MyProduct extends Component {
   state = {

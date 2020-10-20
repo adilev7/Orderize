@@ -1,26 +1,24 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
-import About from "./components/about";
+import Signup from "./components/signup";
+import Signin from "./components/signin";
+import Logout from "./components/logout";
 import Orders from "./components/orders";
-
-import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
-import MyOrder from "./components/myOrder";
-import NotFound from "./components/notFound";
 import EditOrder from "./components/editOrder";
 import CreateOrder from "./components/createOrder";
+import MyOrder from "./components/myOrder";
 import Products from "./components/products";
 import CreateProduct from "./components/createProduct";
 import EditProduct from "./components/editProduct";
 import MyProduct from "./components/myProduct";
 import ProtectedRoute from "./components/common/protectedRoute";
-import Signup from "./components/signup";
-import Signin from "./components/signin";
-import Logout from "./components/logout";
+import NotFound from "./components/notFound";
 
 class App extends Component {
   render() {
@@ -35,7 +33,6 @@ class App extends Component {
             {/* Orders */}
             <ProtectedRoute path='/' exact component={Orders} />
             <ProtectedRoute path='/orders' exact component={Orders} />
-            <Route path='/orders/starred' exact component={Orders} />
             <ProtectedRoute
               path='/create-order'
               component={CreateOrder}
@@ -72,7 +69,6 @@ class App extends Component {
               admin={true}
             />
 
-            <Route path='/about' component={About} />
             <Route path='*' component={NotFound} />
           </Switch>
         </main>

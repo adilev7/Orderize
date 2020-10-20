@@ -1,8 +1,6 @@
 const { Product } = require("../models/product");
 const _ = require("lodash");
 
-/* ORDERS FUNCTIONS */
-
 const getProducts = async () => {
   const products = await Product.find();
   return products;

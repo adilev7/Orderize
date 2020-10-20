@@ -1,8 +1,6 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 
-//compare the http (axios) methods to the server side endpoints
-
 export function getAllProducts() {
   return http.get(`${apiUrl}/products`);
 }

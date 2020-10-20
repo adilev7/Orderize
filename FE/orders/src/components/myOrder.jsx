@@ -107,7 +107,6 @@ class MyOrder extends Component {
                             <td>
                               <Link
                                 title='View Product Details'
-                                // to={`/products/${product?._id}`}
                                 to={{
                                   pathname: `/products/${product?._id}`,
                                   state: {

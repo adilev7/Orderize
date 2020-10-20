@@ -13,35 +13,23 @@ class Orders extends Component {
 
   async componentDidMount() {
     const currentUser = userService.getCurrentUser();
-    // const { pathname } = this.props.location;
     let { data: orders } = await orderService.getAllOrders();
     let { data: starred } = await starredService.getStarredByUser(
       currentUser._id
     );
     starred = starred[0];
 
-    // for (let order of orders) {
-    // if (order._id === starred.orders?.map((orderId) => orderId)) {
-    //   order.starred = true;
-    // }
     orders.map((order) => {
-      let cc = starred?.orders.map((orderId) => {
+      let s = starred?.orders.map((orderId) => {
         if (orderId === order._id) {
           order.starred = true;
-          console.log(order);
         }
         return null;
       });
-      return cc;
+      return s;
     });
 
     this.setState({ orders, filterOrders: orders.reverse() });
-
-    // if (pathname === "/orders/starred") {
-    //   let filterOrders = [...this.state.filterOrders];
-    //   filterOrders = filterOrders.filter((item) => item.starred);
-    //   this.setState({ filterOrders });
-    // }
   }
 
   handleChange = async (e, orderId) => {
@@ -62,11 +50,7 @@ class Orders extends Component {
       e.currentTarget.innerText === "Mark As Important" ||
       e.currentTarget.innerText === "Mark As Unimportant"
     ) {
-      const order = filterOrders.find((item) => item._id === orderId);
-
-      order.important = !order.important;
-
-      orderService.editOrder(order);
+      this.handleImportant(filterOrders, orderId);
     }
 
     if (
@@ -87,24 +71,19 @@ class Orders extends Component {
         this.setState({ filterOrders });
         return;
       }
-
       const starredOrderId = this.findInStarred(starred, orderId);
-
       if (starred && !starred.orders.length) {
         orderInState.starred = true;
         orders = [orderId];
       }
-
       if (!starredOrderId) {
         orderInState.starred = true;
         orders = [...starred.orders, orderId];
       }
-
       if (starredOrderId && starredOrderId === orderInState._id) {
         orderInState.starred = !orderInState.starred;
         orders = starred?.orders.filter((id) => id !== orderId);
       }
-
       starredService.editStarred({
         _id: starred._id,
         user,
@@ -117,6 +96,14 @@ class Orders extends Component {
     this.setState({ filterOrders });
   };
 
+  handleImportant = (filterOrders, orderId) => {
+    const order = filterOrders.find((item) => item._id === orderId);
+
+    order.important = !order.important;
+
+    orderService.editOrder(order);
+  };
+
   findInState = (filterOrders, orderId) => {
     return filterOrders.find((order) => order._id === orderId && order);
   };
@@ -126,17 +113,20 @@ class Orders extends Component {
   };
 
   dltOrder = async (orderId) => {
-    const { _id: user } = userService.getCurrentUser();
-    let { data: starred } = await starredService.getStarredByUser(user);
-    starred = starred[0];
     let orders = [...this.state.orders];
+    let { data } = await starredService.getAllStarred();
+    //Will be deleted in every document in the starred collection as well, if exists.
     if (window.confirm("ARE YOU SURE?")) {
-      starred.orders = starred.orders.filter((id) => id !== orderId);
-      starredService.editStarred({
-        _id: starred._id,
-        user,
-        orders: starred.orders,
+      data.map((item) => {
+        item.orders = item.orders.filter((id) => id !== orderId);
+        starredService.editStarred({
+          _id: item._id,
+          user: item.user,
+          orders: item.orders,
+        });
+        return null;
       });
+
       await orderService.deleteOrder(orderId);
       orders = orders.filter((item) => item._id !== orderId);
       toast(`Order ${orderId} has been successfuly deleted`);
@@ -146,7 +136,6 @@ class Orders extends Component {
 
   render() {
     const { filterOrders, orders } = this.state;
-    // const { pathname } = this.props.location;
     const currentUser = userService.getCurrentUser();
     return (
       <div>
@@ -259,7 +248,7 @@ class Orders extends Component {
                                 onClick={(e) =>
                                   this.handleChange(e, order._id)
                                 }>
-                                <i className='fas fa-exclamation-circle text-secondary mr-2'></i>
+                                <i className='fas fa-exclamation-circle text-danger mr-2'></i>
                                 Mark As Important
                               </button>
                             )}

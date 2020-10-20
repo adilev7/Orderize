@@ -1,10 +1,11 @@
 const { Starred } = require("../models/starred");
 const _ = require("lodash");
 
-/* ORDERS FUNCTIONS */
-
 const getAllStarred = async () => {
-  const starred = await Starred.find();
+  const starred = await Starred.find().catch((err) => {
+    console.log("ERROR", err);
+    return null;
+  });
   return starred;
 };
 
@@ -37,8 +38,6 @@ const deleteStarredById = async (id) => {
   });
   return starred;
 };
-
-
 
 module.exports = {
   getAllStarred,

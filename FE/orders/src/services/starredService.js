@@ -1,8 +1,6 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 
-//compare the http (axios) methods to the server side endpoints
-
 export function getAllStarred() {
   return http.get(`${apiUrl}/starred`);
 }
@@ -21,14 +19,9 @@ export function editStarred(starred) {
   return http.put(`${apiUrl}/starred/${starredId}`, starred);
 }
 
-export function deleteStarred(starredId) {
-  return http.delete(`${apiUrl}/starred/${starredId}`);
-}
-
 export default {
   createStarred,
   getAllStarred,
   getStarredByUser,
   editStarred,
-  deleteStarred,
 };

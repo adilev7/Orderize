@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
-import Search from "../search";
+import Search from "./search";
 
 class Form extends Component {
-  ///* VALIDATE */
-  //Returns an 'errors' object, matching the data properties to their errors returned from 'Joi'. Returns 'null' if no errors exist.
-  // called only when renderring the 'submit' button (for enable/disable the button).
+  ///* validate */
+  // Returns an 'errors' object, matching the data properties to their errors returned    from 'Joi'. Returns 'null' if no errors exist.
+  // Called only within the 'submit' button functions (for enabling/disabling the button) and for final validation before submition.
   validate = () => {
     const { error } = Joi.validate(this.state.data, this.schema, {
       abortEarly: false,
@@ -24,15 +24,14 @@ class Form extends Component {
           errors[item.path[0]] = item.message;
         }
       }
-      console.log(errors);
       return errors;
     }
   };
 
-  ///* VALIDATE INPUT */
-  // called within onChange event...
-  //Validates a specific input using 'Joi'.
-  //Returns the error message. If no error exists, returns 'null'.
+  ///* validateInput */
+  // Called within the handleChange function (line 49)
+  // Validates a specific input using 'Joi'.
+  // Returns the error message if exists.
   validateInput = ({ name, value }) => {
     const obj = { [name]: value };
     const schema = {
@@ -44,9 +43,9 @@ class Form extends Component {
     return error ? error.details[0].message : null;
   };
 
-  ///* HANDLE CHANGE */
-  //Sets the 'errors' object in the state everytime an error changes or doesn't exist.
-  //Starts a binding between the data object in the state and the input's value.
+  ///* handleChange */
+  // Sets the 'errors' object in the state everytime an error status changes.
+  // Starts a binding between the data object in the state and the input's value.
   handleChange = async ({ currentTarget: input }, searchErr) => {
     const { data } = this.state;
     const errors = { ...this.state.errors };
@@ -61,8 +60,8 @@ class Form extends Component {
     this.totalPrice && this.totalPrice();
   };
 
-  ///* HANDLE SUBMIT */
-  //Sets the 'errors' object of the state to the 'errors' object returned by 'this.validate', or to an empty object if no errors exist.
+  ///* handleSubmit */
+  // Sets the 'errors' object of the state to the 'errors' object returned by the validate function (line 10), or to an empty object if no errors exist.
   handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
@@ -71,7 +70,8 @@ class Form extends Component {
     this.doSubmit();
   };
 
-  /* "renderInput" binds the value of the input to "data[name]" if exists, if not, binds to "data.orderItems[id][name]" */
+  /* renderInput */
+  //Binds the value of the input to its specific place in the component"
   renderInput = (
     name,
     label,
@@ -101,6 +101,8 @@ class Form extends Component {
     );
   };
 
+  /* renderSearch */
+  // A search bar using "react-autosuggest" (see search component)
   renderSearch = (
     name,
     id,
@@ -109,7 +111,6 @@ class Form extends Component {
     className = "form-control"
   ) => {
     const { data, errors, dbdata } = this.state;
-    //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return (
       <Search
@@ -120,7 +121,7 @@ class Form extends Component {
         className={className}
         error={inptErr}
         errMsg={errMsg}
-        value={data[name] || data.orderItems[id || 0][name]}
+        value={data[name]}
         validate={this.validate}
         onChange={this.handleChange}
       />

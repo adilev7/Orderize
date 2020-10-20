@@ -128,10 +128,8 @@ class EditOrder extends Form {
     e.preventDefault();
     let data = { ...this.state.data };
     let orderItems = [...this.state.data.orderItems];
-    //Rearrange "orderItems" to be without the deleted item;
     orderItems = orderItems.filter((item) => item.id !== id);
     this.counter = 0;
-    //Reset the counter (id) to each item;
     orderItems.map((item) => (item.id = this.counter++));
     this.setState({ data: { ...data, orderItems } });
   };

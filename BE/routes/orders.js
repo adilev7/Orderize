@@ -1,7 +1,7 @@
-const express = require("express");
 const _ = require("lodash");
-const ordersControl = require("../controllers/ordersControl");
+const express = require("express");
 const router = express.Router();
+const ordersControl = require("../controllers/ordersControl");
 
 router.get("/", async (req, res) => {
   const orders = await ordersControl.getAllOrders();

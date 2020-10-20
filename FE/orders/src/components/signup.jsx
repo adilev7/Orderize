@@ -8,7 +8,6 @@ import { apiUrl } from "../config.json";
 import Form from "./common/form";
 import { toast } from "react-toastify";
 import { Redirect } from "react-router-dom";
-// import starredService from "../services/starredService";
 
 class Signup extends Form {
   state = {

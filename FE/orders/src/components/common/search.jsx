@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
-// import productService from "../services/productService";
-//data,name,placeholder
+
 class Search extends Component {
   state = {
     data: [],
@@ -41,12 +40,9 @@ class Search extends Component {
 
   onChange = (e, { newValue }) => {
     const { errMsg } = this.props;
-    e.persist();
     const { id, name } = this.props;
-    // const message = this.getSuggestions(newValue)
-    //   ? "The product you are searching for does not exist"
-    //   : "";
-
+    
+    e.persist();
     this.setState({ value: newValue });
     const obj = { currentTarget: { id, name, value: newValue } };
     let searchErr = {

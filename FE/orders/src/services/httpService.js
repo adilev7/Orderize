@@ -1,9 +1,6 @@
 import axios from "axios";
-// import userService from "./userService";
 
 axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("token"); 
-//userService.getJwt()
-
 axios.interceptors.response.use(null, (error) => Promise.reject(error));
 
 export default {

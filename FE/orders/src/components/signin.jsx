@@ -3,7 +3,6 @@ import Joi from "joi-browser";
 import userService from "../services/userService";
 
 import Form from "./common/form";
-// import PageHeader from "./common/pageHeader";
 import { Redirect } from "react-router-dom";
 
 class Signin extends Form {

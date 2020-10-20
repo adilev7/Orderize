@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import starredService from "../services/starredService";
-// import orderService from "../services/orderService";
 import userService from "../services/userService";
 class Navbar extends Component {
   state = {
@@ -9,8 +8,12 @@ class Navbar extends Component {
   };
 
   componentDidMount = async () => {
-    const { _id: userId } = userService.getCurrentUser();
-    let { data: starred } = await starredService.getStarredByUser(userId);
+    // Render the number of starred orders in the navbar.
+    // Failed to achieve on every change without a global state library like redux.
+    const currentUser = userService.getCurrentUser();
+    let { data: starred } = await starredService.getStarredByUser(
+      currentUser?._id
+    );
     starred = starred[0]?.orders.length;
     this.setState({ starred });
   };
@@ -56,7 +59,7 @@ class Navbar extends Component {
                   data-toggle='dropdown'
                   aria-haspopup='true'
                   aria-expanded='false'
-                  onClick={this.handleChange}>
+                  onClick={this.handleStarre}>
                   {currentUser.email}
                   {currentUser.admin && (
                     <span className='nav-admin'>ADMIN</span>
@@ -75,7 +78,7 @@ class Navbar extends Component {
                   )}
                   <NavLink
                     className='starred dropdown-item text-warning bg-dark'
-                    to='/orders/starred'>
+                    to='/orders'>
                     <i className='fas fa-star mr-1'></i>Starred{" "}
                     <span className='starNum rounded-circle px-1 ml-5 bg-warning text-dark'>
                       {this.state.starred}

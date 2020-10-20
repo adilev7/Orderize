@@ -1,8 +1,6 @@
 const { User } = require("../models/user");
 const _ = require("lodash");
 
-/* USERS FUNCTIONS */
-
 const getUsers = async () => {
   const users = await User.find();
   return users;
