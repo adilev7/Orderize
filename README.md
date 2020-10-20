@@ -28,7 +28,7 @@ Make sure none of the ports 3900 and 3000 in your localhost are used.
 1. Open a CMD window and paste the following:
 
    ```
-   git clone (https://github.com/adilev7/orders.git)
+   git clone https://github.com/adilev7/orders.git
    ```
 
 Optionaly download the zip file and extract it instead.
