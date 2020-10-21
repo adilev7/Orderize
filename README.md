@@ -54,19 +54,19 @@ Optionaly download the zip file and extract it instead.
 
 **_By the time the project starts running, two users will be created, an admin user and a regular user._**
 
-##### **_Sign in using the exisiting regular user_**:
+#### **_Sign in using the exisiting regular user:_**
 
 ```
 Email: b@b.com
 Password: 123456
 ```
 
-###### _As a regular user you can_:
+###### _As a regular user you can:_
 
 - View all the orders and products listed by the admin users, and get down to specifics of each order/product.
 - Mark any order you want as starred and it will be saved as starred the next time you log in.
 
-##### **_Sign in using the existing admin user_**:
+#### **_Sign in using the existing admin user:_**
 
 ```
  Email: a@a.com
