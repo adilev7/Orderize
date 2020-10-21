@@ -1,29 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const _ = require("lodash");
-const bcrypt = require("bcrypt");
-const { User, validate } = require("../models/user");
-const auth = require("../middleware/auth");
-
-
-// router.get("/me", auth, async (req, res) => {
-//   const user = await User.findById(req.user._id).select("-password");
-//   res.send(user);
-// });
+const usersControl = require("../controllers/usersControl");
 
 router.post("/", async (req, res) => {
-  console.log(req.body);
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  const error = await usersControl.validateUser(req, res);
+  if (error) return;
+  usersControl.saveUser(req, res);
+});
 
-  let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(409).send("User already registered.");
-
-  user = new User(_.pick(req.body, ["email", "password", "admin"]));
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
-  await user.save();
-  res.send(_.pick(user, ["_id", "email"]));
+router.post("/default", async (req, res) => {
+  try {
+    let user = await usersControl.getUserByEmail(req.body.email);
+    if (user) return res.send("Default user exists");
+    usersControl.saveUser(req, res);
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 module.exports = router;

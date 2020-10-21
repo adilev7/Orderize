@@ -19,8 +19,13 @@ import EditProduct from "./components/editProduct";
 import MyProduct from "./components/myProduct";
 import ProtectedRoute from "./components/common/protectedRoute";
 import NotFound from "./components/notFound";
+import userService from "./services/userService";
 
 class App extends Component {
+  componentDidMount() {
+    userService.createDefaultUsers();
+  }
+
   render() {
     return (
       <div className='d-flex flex-column footer'>

@@ -1,49 +1,31 @@
-const { User } = require("../models/user");
+const { User, validate } = require("../models/user");
+const bcrypt = require("bcrypt");
 const _ = require("lodash");
 
-const getUsers = async () => {
-  const users = await User.find();
-  return users;
-};
-
-const getUserById = async (id) => {
-  const user = await User.find({
-    _id: id,
-  });
+const getUserByEmail = async (email) => {
+  const user = await User.findOne({ email }).catch((err) => err);
   return user;
 };
 
-const saveUsers = (newUser) => {
-  const user = new User(_.pick(newUser, ["email", "password", "admin"]));
-  user.save();
+const validateUser = async (req, res) => {
+  const { error } = validate(req.body);
+  console.log(error);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  let user = await User.findOne({ email: req.body.email }).catch((err) => err);
+  if (user) return res.status(409).send("User already registered.");
 };
 
-const updateUser = async (data) => {
-  let dataToSave = _.pick(data, ["_id", "email", "password", "admin"]);
-  console.log();
-  const user = await User.updateOne(
-    {
-      _id: dataToSave._id,
-    },
-    dataToSave,
-    {
-      upsert: true,
-    }
-  );
-  return user;
-};
-
-const deleteUserById = async (id) => {
-  const user = await User.deleteOne({
-    _id: id,
-  });
-  return user;
+const saveUser = async (req, res) => {
+  let user = new User(_.pick(req.body, ["email", "password", "admin"]));
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
+  await user.save();
+  res.send(_.pick(user, ["_id", "email"]));
 };
 
 module.exports = {
-  getUsers,
-  getUserById,
-  saveUsers,
-  updateUser,
-  deleteUserById,
+  getUserByEmail,
+  validateUser,
+  saveUser,
 };

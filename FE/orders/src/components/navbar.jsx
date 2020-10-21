@@ -6,15 +6,15 @@ class Navbar extends Component {
   state = {
     starred: 0,
   };
-
+  component;
   componentDidMount = async () => {
     // Render the number of starred orders in the navbar.
-    // Failed to achieve on every change without a global state library like redux.
+    // Failed to achieve on every change without a global state library.
     const currentUser = userService.getCurrentUser();
     let { data: starred } = await starredService.getStarredByUser(
       currentUser?._id
     );
-    starred = starred[0]?.orders.length;
+    starred = starred[0]?.orders.length || 0;
     this.setState({ starred });
   };
 
@@ -58,8 +58,7 @@ class Navbar extends Component {
                   id='dropdown04'
                   data-toggle='dropdown'
                   aria-haspopup='true'
-                  aria-expanded='false'
-                  onClick={this.handleStarre}>
+                  aria-expanded='false'>
                   {currentUser.email}
                   {currentUser.admin && (
                     <span className='nav-admin'>ADMIN</span>

@@ -26,9 +26,28 @@ export async function login(email, password) {
   localStorage.setItem(tokenKey, data.token);
 }
 
+/* createDefaultUsers - automaticaly create the following users when envoked */
+export async function createDefaultUsers() {
+  await http
+    .post(`${apiUrl}/users/default`, {
+      email: "a@a.com",
+      password: "123456",
+      admin: true,
+    })
+    .catch((error) => console.error(error));
+  await http
+    .post(`${apiUrl}/users/default`, {
+      email: "b@b.com",
+      password: "123456",
+      admin: false,
+    })
+    .catch((error) => console.error(error));
+}
+
 export default {
   login,
   getCurrentUser,
   logout,
   getJwt,
+  createDefaultUsers,
 };
