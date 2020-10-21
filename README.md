@@ -73,9 +73,11 @@ Password: 123456
  Password: 123456
 ```
 
-As an admin user you can also view every order/product and mark an order as starred like a regular user.  
-On top of that you can also: - Create, Update and Delete orders/products.
+###### _As an admin user you can also view every order/product and mark an order as starred like a regular user._
 
+###### _On top of that you can also:_
+
+- Create, Update and Delete orders/products.
 - Create a new user and give permissions as an admin user or as a regular user.
 - Mark orders as important - this will be seen by every user regardless if admin or not.
 
