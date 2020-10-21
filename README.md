@@ -34,32 +34,44 @@ Make sure none of the ports 3900 and 3000 in your localhost are used.
 Optionaly download the zip file and extract it instead.
 
 2. Open the main folder with your code editor.
-3. Split CMD into two windows then type:  
-   `cd BE`  
-   `npm i`  
-   `npm run watch`
+3. Split CMD into two windows then type:
 
-4. In the other window of the CMD type:  
-   `cd FE/orders`  
-   `npm i`  
-   `npm start`
+```
+   cd BE
+   npm i
+   npm run watch
+```
+
+4. In the other window of the CMD type:
+
+```
+   cd FE/orders
+   npm i
+   npm start
+```
 
 ## USAGE
 
-_By the time the project starts running, two users will be created, an admin user and a regular user._
+**_By the time the project starts running, two users will be created, an admin user and a regular user._**
 
-• _Sign in using the exisiting regular user_:  
- Email: b@b.com  
- Password: 123456
+• **Sign in using the exisiting regular user**:
+
+```
+Email: b@b.com
+Password: 123456
+```
 
 _As a regular user you can_:
 
 - View all the orders and products listed by the admin users, and get down to specifics of each order/product.
 - Mark any order you want as starred and it will be saved as starred the next time you log in.
 
-• _Sign in using the existing admin user_:  
- Email: a@a.com  
+• **Sign in using the existing admin user**:
+
+```
+ Email: a@a.com
  Password: 123456
+```
 
 As an admin user you can also view every order/product and mark an order as starred like a regular user.  
 On top of that you can also: - Create, Update and Delete orders/products.
