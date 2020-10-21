@@ -23,7 +23,7 @@ Through this project I will demonstrate my knowledge using **React.Js, Node.Js**
 
 ## INSTALLATION
 
-Make sure none of the ports 3900 and 3000 in your localhost are used.
+_Make sure none of the ports 3900 and 3000 in your localhost are being used._
 
 1. Open a CMD window and paste the following:
 
@@ -54,19 +54,19 @@ Optionaly download the zip file and extract it instead.
 
 **_By the time the project starts running, two users will be created, an admin user and a regular user._**
 
-###### Sign in using the exisiting regular user:
+##### **_Sign in using the exisiting regular user_**:
 
 ```
 Email: b@b.com
 Password: 123456
 ```
 
-_As a regular user you can_:
+###### _As a regular user you can_:
 
 - View all the orders and products listed by the admin users, and get down to specifics of each order/product.
 - Mark any order you want as starred and it will be saved as starred the next time you log in.
 
-###### Sign in using the existing admin user:
+##### **_Sign in using the existing admin user_**:
 
 ```
  Email: a@a.com
@@ -79,7 +79,7 @@ On top of that you can also: - Create, Update and Delete orders/products.
 - Create a new user and give permissions as an admin user or as a regular user.
 - Mark orders as important - this will be seen by every user regardless if admin or not.
 
-• You can create your own regular user as well using the 'Sign up' page (only an admin user can create another admin user).
+###### _You can create your own regular user as well using the 'Sign up' page (only an admin user can create another admin user)._
 
 ## Contributing
 
