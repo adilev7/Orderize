@@ -29,28 +29,39 @@ class CreateOrder extends Form {
   };
   counter = 1;
 
-  /* Joi Schema */
-  orderItemsSchema = {
-    id: Joi.number(),
-    description: Joi.string().min(6).max(30).label("Description"),
-    quantity: Joi.number().min(1).label("Quantity"),
-  };
+  orderItemsSchema = {};
 
-  schema = {
-    custName: Joi.string().min(2).max(30).required().label("Customer Name"),
-    orderItems: Joi.array()
-      .label("orderItems")
-      .required()
-      .items(this.orderItemsSchema),
-    important: Joi.boolean().required(),
-    totalPrice: Joi.number().required(),
-  };
+  schema = {};
 
+  //Fetch data from db and setState
   componentDidMount = async () => {
     const { data: dbdata } = await productService.getAllProducts();
     if (dbdata) {
-      this.setState({ dbdata });
+      this.setState({
+        dbdata,
+      });
     }
+  };
+
+  //Update Joi schema after data has been fetched
+  componentDidUpdate = () => {
+    this.orderItemsSchema = {
+      id: Joi.number(),
+      description: Joi.string()
+        .valid(this.state.dbdata.map((item) => item.description))
+        //Will be valid only if matches an item.description
+        .label("Description"),
+      quantity: Joi.number().min(1).label("Quantity"),
+    };
+    this.schema = {
+      custName: Joi.string().min(2).max(30).required().label("Customer Name"),
+      orderItems: Joi.array()
+        .label("orderItems")
+        .required()
+        .items(this.orderItemsSchema),
+      important: Joi.boolean().required(),
+      totalPrice: Joi.number().required(),
+    };
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */

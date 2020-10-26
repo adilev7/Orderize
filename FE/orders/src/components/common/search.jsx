@@ -15,11 +15,11 @@ class Search extends Component {
 
   getSuggestions = (value) => {
     const { data } = this.state;
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
+    const inputValue = value?.trim().toLowerCase();
+    const inputLength = inputValue?.length;
     if (data) {
       return inputLength === 0
-        ? []
+        ? data
         : data.filter(
             (item) =>
               item.description.toLowerCase().slice(0, inputLength) ===
@@ -39,20 +39,14 @@ class Search extends Component {
   };
 
   onChange = (e, { newValue }) => {
-    const { errMsg, id, name } = this.props;
+    const { id, name } = this.props;
     e.persist();
-
     this.setState({ value: newValue });
 
     const obj = { currentTarget: { id, name, value: newValue } };
-    let searchErr = {
-      id,
-      name,
-      message: this.getSuggestions(newValue) ? errMsg : "",
-    };
 
     if (e.currentTarget.name === name) {
-      this.props.onChange(e, searchErr);
+      this.props.onChange(e);
     } else {
       this.props.onChange(obj);
     }
@@ -72,15 +66,7 @@ class Search extends Component {
 
   render() {
     const { value, suggestions } = this.state;
-    const {
-      name,
-      id,
-      placeholder,
-      error,
-      errMsg,
-      validate,
-      ...rest
-    } = this.props;
+    const { name, id, placeholder, error, ...rest } = this.props;
 
     const inputProps = {
       ...rest,

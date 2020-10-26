@@ -34,7 +34,7 @@ class EditOrder extends Form {
   orderItemsSchema = {
     _id: Joi.string(),
     id: Joi.number(),
-    description: Joi.string().min(6).max(30).label("Description"),
+    description: Joi.string().label("Description"),
     quantity: Joi.number().min(1).label("Quantity"),
   };
 
@@ -52,7 +52,7 @@ class EditOrder extends Form {
     __v: Joi.number(),
   };
 
-  //Get the specific order data from the DB;
+  //Fetch the specific order data from the DB;
   componentDidMount = async () => {
     let data = await orderService
       .getOrder(this.props.match.params.id)
@@ -69,6 +69,33 @@ class EditOrder extends Form {
       const { data: dbdata } = await productService.getAllProducts();
       this.setState({ data, dbdata: dbdata || [] });
     }
+  };
+
+  //Update Joi schema after data has been fetched
+  componentDidUpdate = () => {
+    this.orderItemsSchema = {
+      _id: Joi.string(),
+      id: Joi.number(),
+      description: Joi.string()
+        .valid(this.state.dbdata.map((item) => item.description))
+        //Will be valid only if matches an item.description
+        .label("Description"),
+      quantity: Joi.number().min(1).label("Quantity"),
+    };
+
+    this.schema = {
+      _id: Joi.string(),
+      custName: Joi.string().min(2).max(30).required().label("Customer Name"),
+      orderItems: Joi.array()
+        .label("orderItems")
+        .required()
+        .items(this.orderItemsSchema),
+      createdAt: Joi.string(),
+      starred: Joi.boolean(),
+      important: Joi.boolean(),
+      totalPrice: Joi.number(),
+      __v: Joi.number(),
+    };
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */

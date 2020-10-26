@@ -5,8 +5,8 @@ import Search from "./search";
 
 class Form extends Component {
   ///* validate */
-  // Returns an 'errors' object, matching the data properties to their errors returned    from 'Joi'. Returns 'null' if no errors exist.
-  // Called only within the 'submit' button functions (for enabling/disabling the button) and for final validation before submition.
+  // Returns an 'errors' object, matching the data properties to their errors returned from 'Joi'. Returns 'null' if no errors exist.
+  // Called only within the 'submit' functions (for enabling/disabling the submit button) and for final validation before submition.
   validate = () => {
     const { error } = Joi.validate(this.state.data, this.schema, {
       abortEarly: false,
@@ -40,16 +40,21 @@ class Form extends Component {
         : this.orderItemsSchema[name],
     };
     const { error } = Joi.validate(obj, schema);
-    return error ? error.details[0].message : null;
+    if (error) {
+      if (error?.details[0].type === "any.allowOnly") {
+        return "Must choose an existing product";
+      }
+      return error.details[0].message;
+    }
   };
 
   ///* handleChange */
   // Sets the 'errors' object in the state everytime an error status changes.
   // Starts a binding between the data object in the state and the input's value.
-  handleChange = async ({ currentTarget: input }, searchErr) => {
+  handleChange = async ({ currentTarget: input }) => {
     const { data } = this.state;
     const errors = { ...this.state.errors };
-    const errorMessage = searchErr?.message || this.validateInput(input);
+    const errorMessage = this.validateInput(input);
     this.handleErrChnge(errors, input, errorMessage);
 
     data.hasOwnProperty(input.name)
@@ -71,7 +76,7 @@ class Form extends Component {
   };
 
   /* renderInput */
-  //Binds the value of the input to its specific place in the component"
+  //Binds the value of the input to its specific place in the component
   renderInput = (
     name,
     label,
@@ -80,7 +85,7 @@ class Form extends Component {
     type = "text",
     className = "form-control"
   ) => {
-    let { data, errors } = this.state;
+    let { errors } = this.state;
     //inptErr will hold the specific input's error message (if exists);
     let inptErr = this.handleErrRndr(errors, name, id);
     return (
@@ -93,24 +98,20 @@ class Form extends Component {
         min={type === "number" ? (name === "quantity" ? 1 : 0) : null}
         type={type}
         error={inptErr}
-        value={
-          data[name] || (data.orderItems && data.orderItems[id || 0][name])
-        }
+        value={this.handleValue(id, name)}
         onChange={this.handleChange}
       />
     );
   };
+  handleValue = (id, name) => {
+    const { data } = this.state;
+    return data[name] || data.orderItems[id || 0][name];
+  };
 
   /* renderSearch */
   // A search bar using "react-autosuggest" (see search component)
-  renderSearch = (
-    name,
-    id,
-    placeholder,
-    errMsg,
-    className = "form-control"
-  ) => {
-    const { data, errors, dbdata } = this.state;
+  renderSearch = (name, id, placeholder, className = "form-control") => {
+    const { errors, dbdata } = this.state;
     let inptErr = this.handleErrRndr(errors, name, id);
     return (
       <Search
@@ -120,9 +121,7 @@ class Form extends Component {
         data={dbdata}
         className={className}
         error={inptErr}
-        errMsg={errMsg}
-        value={data[name] || data.orderItems[id || 0][name]}
-        validate={this.validate}
+        value={this.handleValue(id, name)}
         onChange={this.handleChange}
       />
     );
