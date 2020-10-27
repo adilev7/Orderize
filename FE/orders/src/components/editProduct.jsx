@@ -17,6 +17,7 @@ class EditProduct extends Form {
       price: "",
       inStorage: "",
     },
+    dbdata: [],
   };
   counter = 0;
 
@@ -43,8 +44,23 @@ class EditProduct extends Form {
         console.error(error.response);
       });
     if (data) {
-      this.setState({ data:data[0] });
+      const { data: dbdata } = await productService.getAllProducts();
+      this.setState({ data: data[0], dbdata: dbdata || [] });
     }
+  };
+
+  componentDidUpdate = () => {
+    this.schema = {
+      _id: Joi.string(),
+      __v: Joi.number(),
+      description: Joi.string()
+        .invalid(this.state.dbdata.map((item) => item.description))
+        .required()
+        .label("description"),
+      price: Joi.number().min(0).required().label("price"),
+      inStorage: Joi.number().min(0).required().label("inStorage"),
+      createdAt: Joi.string(),
+    };
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */

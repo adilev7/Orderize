@@ -12,6 +12,7 @@ class Orders extends Component {
   };
 
   async componentDidMount() {
+    // const { pathname } = this.props.history.location;
     const currentUser = userService.getCurrentUser();
     let { data: orders } = await orderService.getAllOrders();
     let { data: starred } = await starredService.getStarredByUser(
@@ -30,6 +31,14 @@ class Orders extends Component {
     });
 
     this.setState({ orders, filterOrders: orders.reverse() });
+
+    // if (pathname === "/orders/starred") {
+    //   let filterOrders = [...this.state.filterOrders];
+    //   filterOrders = filterOrders.filter((order) => order.starred);
+    //   this.setState({
+    //     filterOrders,
+    //   });
+    // }
   }
 
   handleChange = async (e, orderId) => {
@@ -133,10 +142,20 @@ class Orders extends Component {
       this.setState({ orders, filterOrders: orders });
     }
   };
-
+  handleStarredPath = () => {
+    const { pathname } = this.props.history.location;
+    let filterOrders = [...this.state.filterOrders];
+    if (pathname === "/orders/starred") {
+      filterOrders = filterOrders.filter((order) => order.starred);
+    }
+    return filterOrders;
+  };
   render() {
-    const { filterOrders, orders } = this.state;
+    const { orders } = this.state;
+    const { pathname } = this.props.history.location;
+    let filterOrders = this.handleStarredPath();
     const currentUser = userService.getCurrentUser();
+
     return (
       <div>
         <div className='container'>
@@ -175,6 +194,33 @@ class Orders extends Component {
           </div>
         </div>
         <div className='row'>
+          <div className='bubble-container'>
+            <Link
+              title={`${
+                pathname === "/orders/starred"
+                  ? "Back to full orders list"
+                  : "View starred orders"
+              }`}
+              className={`star-bubble ${
+                filterOrders.find((order) => order.starred)
+                  ? "d-block"
+                  : "d-none"
+              }`}
+              to={`${
+                pathname === "/orders/starred" ? "/orders" : "/orders/starred"
+              }`}>
+              <i className='star fas fa-star fa-2x'></i>
+              <div className='notification'>
+                {filterOrders.filter((order) => order.starred).length}
+              </div>
+              <div
+                className={`starred-back ${
+                  pathname === "/orders/starred" ? "d-block" : "d-none"
+                }`}>
+                BACK
+              </div>
+            </Link>
+          </div>
           <div className='table-responsive my-5'>
             <table className='table col-10 mx-auto table-bordered table-warning border-2'>
               <caption className='d-none'>list of orders</caption>
@@ -209,7 +255,11 @@ class Orders extends Component {
                   filterOrders.map((order) => (
                     <tr
                       key={order._id}
-                      className={order.important ? "table-danger" : undefined}>
+                      className={`${
+                        (order.starred || order.important) && "font-weight-bold"
+                      } ${order.starred && !order.important && "text-warning"}
+                      ${order.starred && order.important && "important-starred"}
+                       ${order.important && "table-danger"}`}>
                       <td className='p-0'>
                         <div className='btn-group dropright'>
                           <button
@@ -220,14 +270,11 @@ class Orders extends Component {
                             data-toggle='dropdown'
                             aria-haspopup='true'
                             aria-expanded='false'>
-                            <i
-                              className={`fas fa-ellipsis-v ${
-                                order.starred && "text-warning"
-                              }`}></i>
+                            <i className='fas fa-ellipsis-v'></i>
                           </button>
-                          <div className='dropdown-menu p-0 bg-light'>
+                          <div className='dropdown-menu p-0 bg-light shadow'>
                             <Link
-                              className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                              className='dropdown-item bg-light text-dark pl-3 px-1 py-2 noStyle'
                               to={`/orders/${order._id}`}>
                               <i className='fas fa-clipboard text-secondary mr-2'></i>
                               View Order
@@ -275,7 +322,7 @@ class Orders extends Component {
                             {currentUser?.admin && (
                               <React.Fragment>
                                 <Link
-                                  className='dropdown-item bg-light text-dark pl-3 px-1 py-2'
+                                  className='dropdown-item bg-light text-dark pl-3 px-1 py-2 noStyle'
                                   to={`/edit-order/${order._id}`}>
                                   <i className='fas fa-pen text-primary mr-2'></i>{" "}
                                   Edit Order

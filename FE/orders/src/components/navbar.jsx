@@ -76,14 +76,6 @@ class Navbar extends Component {
                     </NavLink>
                   )}
                   <NavLink
-                    className='starred dropdown-item text-warning bg-dark'
-                    to='/orders'>
-                    <i className='fas fa-star mr-1'></i>Starred{" "}
-                    <span className='starNum rounded-circle px-1 ml-5 bg-warning text-dark'>
-                      {this.state.starred}
-                    </span>
-                  </NavLink>
-                  <NavLink
                     className='dropdown-item text-warning bg-dark'
                     to='/logout'>
                     <i className='fas fa-sign-out-alt mr-1'></i> Log Out

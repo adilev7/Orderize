@@ -44,6 +44,9 @@ class Form extends Component {
       if (error?.details[0].type === "any.allowOnly") {
         return "Must choose an existing product";
       }
+      if (error?.details[0].type === "any.invalid") {
+        return "This product already exists";
+      }
       return error.details[0].message;
     }
   };
@@ -105,7 +108,7 @@ class Form extends Component {
   };
   handleValue = (id, name) => {
     const { data } = this.state;
-    return data[name] || data.orderItems[id || 0][name];
+    return data[name] || (data.orderItems && data.orderItems[id || 0][name]);
   };
 
   /* renderSearch */

@@ -54,7 +54,7 @@ class EditOrder extends Form {
 
   //Fetch the specific order data from the DB;
   componentDidMount = async () => {
-    let data = await orderService
+    const data = await orderService
       .getOrder(this.props.match.params.id)
       .then((response) => {
         return response.data;
@@ -64,10 +64,9 @@ class EditOrder extends Form {
         console.error(error.response);
       });
     if (data) {
-      data = data[0];
       data.orderItems.map((item) => (item.id = this.counter++));
       const { data: dbdata } = await productService.getAllProducts();
-      this.setState({ data, dbdata: dbdata || [] });
+      this.setState({ data: data[0], dbdata: dbdata || [] });
     }
   };
 

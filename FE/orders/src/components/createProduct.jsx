@@ -17,15 +17,32 @@ class CreateProduct extends Form {
       price: "",
       inStorage: "",
     },
+    dbdata: [],
   };
   counter = 1;
 
   /* Joi Schema */
 
-  schema = {
-    description: Joi.string().required().label("description"),
-    price: Joi.number().min(0).required().label("price"),
-    inStorage: Joi.number().min(0).required().label("inStorage"),
+  schema = {};
+
+  componentDidMount = async () => {
+    const { data: dbdata } = await productService.getAllProducts();
+    if (dbdata) {
+      this.setState({
+        dbdata,
+      });
+    }
+  };
+
+  componentDidUpdate = () => {
+    this.schema = {
+      description: Joi.string()
+        .invalid(this.state.dbdata.map((item) => item.description))
+        .required()
+        .label("description"),
+      price: Joi.number().min(0).required().label("price"),
+      inStorage: Joi.number().min(0).required().label("inStorage"),
+    };
   };
 
   /* "handleErrChange" will invoke inside the "handleChange" function in 'form.jsx' */

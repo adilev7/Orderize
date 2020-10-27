@@ -54,6 +54,8 @@ nav {
   grid-template-rows: 1fr auto;
 }
 .footer footer {
+  padding: 0;
+  margin: 0 !important;
   /* background-color: rgba(88, 88, 97, 0.795); */
   grid-row-start: 2;
   grid-row-end: 3;
@@ -69,6 +71,81 @@ nav {
 }
 
 /* Orders/Products Page */
+.important-starred {
+  text-shadow: 1px 1px 0 #ffd900, 1px -1px 0 #ffd900, -1px 1px 0 #ffd900,
+    -1px -1px 0 #ffd900, 1px 0px 0 #ffd900, 0px 1px 0 #ffd900,
+    -1px 0px 0 #ffd900, 0px -1px 0 #ffd900, 1px 1px 1px black;
+}
+
+.bubble-container {
+  position: absolute;
+  z-index: 0;
+  width: 98vw;
+  height: 100vh;
+}
+
+.star-bubble {
+  position: sticky;
+  top: 17em;
+  left: 76em;
+  z-index: 999;
+  text-align: center;
+  background-color: rgb(0, 171, 177);
+  border-radius: 50%;
+  height: 2.2em;
+  width: 2.2em;
+  box-shadow: 0 0 5px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+}
+.star-bubble:hover {
+  cursor: pointer;
+  transform: scale(0.92, 0.92);
+  box-shadow: 0 0 3px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+  text-decoration: none;
+  transition: all 0.1s ease-in-out;
+}
+
+.star {
+  color: #ffee00;
+}
+
+.notification {
+  position: relative;
+  bottom: 3em;
+  right: 0.8em;
+  background-color: rgb(255, 76, 76);
+  border-radius: 50%;
+  color: white;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-align: center;
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.starred-back {
+  position: relative;
+  bottom: 1em;
+  font-size: 1em;
+  font-weight: lighter;
+  font-family: fantasy;
+  color: rgb(255, 238, 0);
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.45), 0 0 2px rgba(0, 0, 0, 0.45),
+    0 0 3px rgba(0, 0, 0, 0.45), 0 0 4px rgba(0, 0, 0, 0.45),
+    0 0 45px rgba(0, 0, 0, 0.45), 0 0 6px rgba(0, 0, 0, 0.45),
+    0 0 7px rgba(0, 0, 0, 0.45);
+  text-decoration: none !important;
+}
+
+.star-bubble:hover .starred-back {
+  text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 4px black;
+}
+
+.noStyle {
+  text-shadow: none;
+  letter-spacing: normal;
+  color: black;
+}
+
 .bg-red {
   background-color: rgb(240, 200, 200) !important;
   border: none !important;
@@ -202,5 +279,25 @@ tr td.td3 {
   }
   .react-autosuggest__suggestions-container {
     width: 50% !important;
+  }
+  .bubble-container {
+    position: absolute;
+    top: -2.5em;
+    right: 76.5em;
+    z-index: 2;
+    height: 2.2em;
+    width: 2.2em;
+  }
+
+  .star-bubble {
+    position: relative;
+    z-index: 999;
+    text-align: center;
+    background-color: rgb(0, 171, 177);
+    /* background-color: rgb(121, 121, 121); */
+    border-radius: 50%;
+    height: 2.2em;
+    width: 2.2em;
+    box-shadow: 0 0 5px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
   }
 }

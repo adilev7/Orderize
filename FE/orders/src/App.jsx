@@ -38,6 +38,7 @@ class App extends Component {
             {/* Orders */}
             <ProtectedRoute path='/' exact component={Orders} />
             <ProtectedRoute path='/orders' exact component={Orders} />
+            <ProtectedRoute path='/orders/starred' exact component={Orders} />
             <ProtectedRoute
               path='/create-order'
               component={CreateOrder}
@@ -78,7 +79,7 @@ class App extends Component {
           </Switch>
         </main>
         <div className='my-5'></div>
-        <footer className='font-small bg-dark w-100'>
+        <footer className='font-small bg-dark w-100 sticky-bottom'>
           <Footer />
         </footer>
       </div>
