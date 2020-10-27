@@ -16,6 +16,7 @@ class MyOrder extends Component {
           quantity: 1,
         },
       ],
+      important: false,
       totalPrice: 0,
     },
 
@@ -65,8 +66,23 @@ class MyOrder extends Component {
     return (
       <div className='container-fluid mt-5'>
         <div className='row'>
-          <div className='card link-warning shadow mx-auto'>
-            <h3 className='card-header text-secondary text-center'>{`${data._id}`}</h3>
+          <div className='card rounded link-warning shadow mx-auto'>
+            {data.important && (
+              <div
+                className='important-info'
+                title='Marked as an order with high priority'>
+                <i className='fas fa-exclamation-circle fa-2x m-0 p-0'></i>
+              </div>
+            )}
+            <h3
+              title={`${
+                data.important
+                  ? "Marked as an order with high priority"
+                  : `Order number: ${data._id}`
+              }`}
+              className={`card-header rounded ${
+                data.important ? "bg-important" : "text-secondary"
+              } text-center`}>{`${data._id}`}</h3>
             <div className='card-body'>
               <ul className='list-group list-group-flush mx-auto text-center'>
                 <li className='list-group-item text-info h4'>
@@ -150,7 +166,10 @@ class MyOrder extends Component {
                   </div>
                 </div>
               )}
-              <div className='col-12 text-center bg-light text-secondary mt-2 mx-auto'>
+              <div
+                className={`col-12 text-center rounded ${
+                  data.important ? "bg-important" : "bg-light text-secondary"
+                } mt-2 mx-auto`}>
                 Created At {data.createdAt}
               </div>
             </div>

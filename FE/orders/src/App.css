@@ -160,6 +160,24 @@ nav {
   box-shadow: 0 0 0 3px rgba(190, 160, 160, 0.301) !important;
 }
 
+.bg-important {
+  background-color: rgb(255, 97, 97) !important;
+  color: rgb(37, 37, 37);
+  font-weight: bold;
+}
+
+.important-info {
+  position: absolute;
+  color: rgba(48, 48, 48, 0.89);
+  margin: 0.8em;
+  padding: 0;
+  cursor: help;
+}
+
+.card-header:hover {
+  cursor: help;
+}
+
 .table-responsive {
   padding: 2% 0 10% 0 !important;
   overflow-y: hidden !important;
@@ -294,10 +312,15 @@ tr td.td3 {
     z-index: 999;
     text-align: center;
     background-color: rgb(0, 171, 177);
-    /* background-color: rgb(121, 121, 121); */
     border-radius: 50%;
     height: 2.2em;
     width: 2.2em;
     box-shadow: 0 0 5px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+  }
+
+  .important-info {
+    margin: 0.8em 0.8em 0.8em 0.3em;
+    transform: scale(0.9, 0.9);
+    transition: all 0.1s ease-in-out;
   }
 }
