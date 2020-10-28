@@ -35,7 +35,7 @@ class MyProduct extends Component {
     if (window.confirm("ARE YOU SURE?")) {
       await productService.deleteProduct(data._id);
       await this.props.history.replace("/products");
-      toast(`${this.state.data.description} has been successfuly deleted`);
+      toast(`${this.state.data.description} has been successfuly deleted`,{className:"successToast"});
     }
   };
 

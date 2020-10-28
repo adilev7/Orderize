@@ -37,7 +37,7 @@ class Products extends Component {
     if (window.confirm("ARE YOU SURE?")) {
       await productService.deleteProduct(productId);
       products = products.filter((item) => item._id !== productId);
-      toast(`Product ${productId} has been successfuly deleted`);
+      toast(`Product ${productId} has been successfuly deleted`,{className:"successToast"});
     }
     this.setState({ products, filterProducts: products });
   };

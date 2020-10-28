@@ -105,7 +105,9 @@ class CreateOrder extends Form {
     await orderService.createOrder(data);
     this.setState({ data });
     this.props.history.replace("/orders");
-    toast("The Order Has Been Listed Successfuly");
+    toast("The Order Has Been Listed Successfuly", {
+      className: "successToast",
+    });
   };
 
   duplicateItem = (e) => {

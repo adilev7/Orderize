@@ -82,7 +82,7 @@ class EditProduct extends Form {
     this.setState({ data });
     await productService.editProduct(this.state.data);
     this.props.history.replace("/products");
-    toast(`${data.description} Has Been Updated Successfuly`);
+    toast(`${data.description} Has Been Updated Successfuly`,{className:"successToast"});
   };
 
   render() {

@@ -47,8 +47,8 @@ class Signup extends Form {
     try {
       await http.post(`${apiUrl}/users`, data);
       currentUser?.admin
-        ? toast("User Created Successfuly")
-        : toast("You are now registered");
+        ? toast("User Created Successfuly", { className: "newUser" })
+        : toast("You are now registered", { className: "newUser" });
 
       history.replace("/signin");
     } catch (error) {

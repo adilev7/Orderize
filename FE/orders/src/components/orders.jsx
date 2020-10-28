@@ -138,7 +138,7 @@ class Orders extends Component {
 
       await orderService.deleteOrder(orderId);
       orders = orders.filter((item) => item._id !== orderId);
-      toast(`Order ${orderId} has been successfuly deleted`);
+      toast(`Order ${orderId} has been successfuly deleted`,{className:"successToast"});
       this.setState({ orders, filterOrders: orders });
     }
   };

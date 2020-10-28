@@ -56,7 +56,7 @@ class MyOrder extends Component {
     if (window.confirm("ARE YOU SURE?")) {
       await orderService.deleteOrder(data._id);
       await this.props.history.replace("/orders");
-      toast(`Order number ${this.state.data._id} has been successfuly deleted`);
+      toast(`Order number ${this.state.data._id} has been successfuly deleted`,{className:"successToast"});
     }
   };
 

@@ -139,7 +139,7 @@ class EditOrder extends Form {
     this.setState({ data });
     await orderService.editOrder(this.state.data);
     this.props.history.replace("/orders");
-    toast(`Order Number ${data._id} Has Been Updated Successfuly`);
+    toast(`Order Number ${data._id} Has Been Updated Successfuly`,{className:"successToast"});
   };
 
   duplicateItem = (e) => {

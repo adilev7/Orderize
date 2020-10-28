@@ -62,7 +62,7 @@ class CreateProduct extends Form {
     await productService.createProduct(data);
     this.setState({ data });
     this.props.history.replace("/products");
-    toast(`${data.description} Has Been Listed Successfuly`);
+    toast(`${data.description} Has Been Listed Successfuly`,{className:"successToast"});
   };
 
   render() {
