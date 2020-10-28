@@ -346,6 +346,7 @@ tr td.td3 {
   color: rgba(0, 0, 0, 0.651);
 }
 
+/* Mobile */
 @media only screen and (max-width: 1000px) {
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
@@ -355,24 +356,18 @@ tr td.td3 {
   .react-autosuggest__suggestions-container {
     width: 50% !important;
   }
-  .bubble-container {
-    position: absolute;
-    top: -2.5em;
-    right: 76.5em;
-    z-index: 2;
-    height: 2.2em;
-    width: 2.2em;
-  }
 
   .star-bubble {
     position: relative;
-    z-index: 999;
-    text-align: center;
-    background-color: rgb(0, 171, 177);
-    border-radius: 50%;
-    height: 2.2em;
-    width: 2.2em;
-    box-shadow: 0 0 5px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+    top: 2em;
+    left: 80%;
+    z-index: 2;
+  }
+  .important-bubble {
+    position: relative;
+    top: 2em;
+    left: 84%;
+    z-index: 2;
   }
 
   .important-info {
