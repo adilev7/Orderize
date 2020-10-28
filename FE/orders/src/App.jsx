@@ -39,6 +39,7 @@ class App extends Component {
             <ProtectedRoute path='/' exact component={Orders} />
             <ProtectedRoute path='/orders' exact component={Orders} />
             <ProtectedRoute path='/orders/starred' exact component={Orders} />
+            <ProtectedRoute path='/orders/important' exact component={Orders} />
             <ProtectedRoute
               path='/create-order'
               component={CreateOrder}

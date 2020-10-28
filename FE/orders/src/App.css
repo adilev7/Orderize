@@ -84,6 +84,19 @@ nav {
   height: 100vh;
 }
 
+.notification {
+  position: relative;
+  bottom: 3em;
+  right: 0.8em;
+  background-color: rgb(255, 76, 76);
+  border-radius: 50%;
+  color: white;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-align: center;
+  height: 1.5em;
+  width: 1.5em;
+}
 .star-bubble {
   position: sticky;
   top: 17em;
@@ -107,28 +120,13 @@ nav {
 .star {
   color: #ffee00;
 }
-
-.notification {
-  position: relative;
-  bottom: 3em;
-  right: 0.8em;
-  background-color: rgb(255, 76, 76);
-  border-radius: 50%;
-  color: white;
-  font-size: 0.7em;
-  font-weight: bold;
-  text-align: center;
-  height: 1.5em;
-  width: 1.5em;
-}
-
 .starred-back {
   position: relative;
   bottom: 1em;
   font-size: 1em;
   font-weight: lighter;
   font-family: fantasy;
-  color: rgb(255, 238, 0);
+  color: rgb(255, 217, 0);
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.45), 0 0 2px rgba(0, 0, 0, 0.45),
     0 0 3px rgba(0, 0, 0, 0.45), 0 0 4px rgba(0, 0, 0, 0.45),
     0 0 45px rgba(0, 0, 0, 0.45), 0 0 6px rgba(0, 0, 0, 0.45),
@@ -136,7 +134,48 @@ nav {
   text-decoration: none !important;
 }
 
-.star-bubble:hover .starred-back {
+.starred-bubble:hover .starred-back {
+  text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 4px black;
+}
+.important-bubble {
+  position: sticky;
+  top: 21em;
+  left: 76em;
+  z-index: 999;
+  text-align: center;
+  background-color: rgb(238, 172, 172);
+  border-radius: 50%;
+  height: 2.2em;
+  width: 2.2em;
+  box-shadow: 0 0 5px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+}
+.important-bubble:hover {
+  cursor: pointer;
+  transform: scale(0.92, 0.92);
+  box-shadow: 0 0 3px black, inset 0 0 3px rgba(0, 0, 0, 0.507);
+  text-decoration: none;
+  transition: all 0.1s ease-in-out;
+}
+
+.important {
+  color: rgb(236, 84, 84);
+}
+
+.important-back {
+  position: relative;
+  bottom: 1em;
+  font-size: 1em;
+  font-weight: lighter;
+  font-family: fantasy;
+  color: rgb(236, 84, 84);
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.45), 0 0 2px rgba(0, 0, 0, 0.45),
+    0 0 3px rgba(0, 0, 0, 0.45), 0 0 4px rgba(0, 0, 0, 0.45),
+    0 0 45px rgba(0, 0, 0, 0.45), 0 0 6px rgba(0, 0, 0, 0.45),
+    0 0 7px rgba(0, 0, 0, 0.45);
+  text-decoration: none !important;
+}
+
+.important-bubble:hover .important-back {
   text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 4px black;
 }
 
