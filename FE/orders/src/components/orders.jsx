@@ -193,54 +193,60 @@ class Orders extends Component {
           </div>
         </div>
         <div className='row'>
-          <Link
-            title={`${
-              pathname === "/orders/starred"
-                ? "Back to full orders list"
-                : "View starred orders"
-            }`}
-            className={`star-bubble ${
-              filterOrders.find((order) => order.starred) ? "d-block" : "d-none"
-            }`}
-            to={`${
-              pathname === "/orders/starred" ? "/orders" : "/orders/starred"
-            }`}>
-            <i className='star fas fa-star fa-2x'></i>
-            <div className='notification'>
-              {orders.filter((order) => order.starred).length}
-            </div>
-            <div
-              className={`starred-back ${
-                pathname === "/orders/starred" ? "d-block" : "d-none"
+          <div className='bubble-container ml-auto mr-4 mr-md-0 col-1'>
+            <Link
+              title={`${
+                pathname === "/orders/starred"
+                  ? "Back to full orders list"
+                  : "View starred orders"
+              }`}
+              className={`star-bubble mb-4 mx-auto ${
+                filterOrders.find((order) => order.starred)
+                  ? "d-block"
+                  : "d-none"
+              }`}
+              to={`${
+                pathname === "/orders/starred" ? "/orders" : "/orders/starred"
               }`}>
-              BACK
-            </div>
-          </Link>
-          <Link
-            title={`${
-              pathname === "/orders/important"
-                ? "Back to full orders list"
-                : "View important orders"
-            }`}
-            className={`important-bubble ${
-              filterOrders.find((order) => order.important)
-                ? "d-block"
-                : "d-none"
-            }`}
-            to={`${
-              pathname === "/orders/important" ? "/orders" : "/orders/important"
-            }`}>
-            <i className='important fas fa-exclamation fa-2x'></i>
-            <div className='notification'>
-              {orders.filter((order) => order.important).length}
-            </div>
-            <div
-              className={`important-back ${
-                pathname === "/orders/important" ? "d-block" : "d-none"
+              <i className='star fas fa-star fa-2x'></i>
+              <div className='notification'>
+                {orders.filter((order) => order.starred).length}
+              </div>
+              <div
+                className={`starred-back ${
+                  pathname === "/orders/starred" ? "d-block" : "d-none"
+                }`}>
+                BACK
+              </div>
+            </Link>
+            <Link
+              title={`${
+                pathname === "/orders/important"
+                  ? "Back to full orders list"
+                  : "View important orders"
+              }`}
+              className={`important-bubble mt-3 mx-auto ${
+                filterOrders.find((order) => order.important)
+                  ? "d-block"
+                  : "d-none"
+              }`}
+              to={`${
+                pathname === "/orders/important"
+                  ? "/orders"
+                  : "/orders/important"
               }`}>
-              BACK
-            </div>
-          </Link>
+              <i className='important fas fa-exclamation fa-2x'></i>
+              <div className='notification'>
+                {orders.filter((order) => order.important).length}
+              </div>
+              <div
+                className={`important-back ${
+                  pathname === "/orders/important" ? "d-block" : "d-none"
+                }`}>
+                BACK
+              </div>
+            </Link>
+          </div>
           <div className='table-responsive my-5'>
             <table className='table col-10 mx-auto table-bordered table-warning border-2'>
               <caption className='d-none'>list of orders</caption>
