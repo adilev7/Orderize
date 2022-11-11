@@ -1,9 +1,7 @@
 # ORDERIZE
 
 **A web application for managing orders and inventory.**
-
-This project was made as a final project for a 7 month course on Full Stack Web Development.  
-Through this project I will demonstrate my knowledge using **React.Js, Node.Js** and **MongoDB**.
+This project uses a React.js frontend, a Node.js backend and a MongoDB database
 
 - **Description**
   The system includes pages for managing products, users and orders.
